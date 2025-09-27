@@ -1,1 +1,3 @@
-export { LoginForm } from "./login_form"
+export { LoginForm } from "./login-form"
+export { SignUpForm } from "./sign-up-form"
+export { ErrorForm } from "./error-form"

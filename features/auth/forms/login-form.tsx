@@ -48,7 +48,7 @@ export function LoginForm({
     };
 
     return (
-        <div className={cn("flex flex-col items-center justify-center px-4 py-8", className)} {...props}>
+        <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>
@@ -56,7 +56,7 @@ export function LoginForm({
                         Enter your email below to login to your account
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent>
                     <form onSubmit={handleLogin} className="flex flex-col gap-6">
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
