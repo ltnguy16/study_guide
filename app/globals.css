@@ -1,26 +1,138 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 30 50% 92%;
+    /* Soft Cream */
+    --foreground: 220 37% 23%;
+    /* Space Cadet */
+
+    --card: 30 50% 92%;
+    --card-foreground: 220 37% 23%;
+
+    --popover: 30 50% 92%;
+    --popover-foreground: 220 37% 23%;
+
+    --primary: 220 37% 23%;
+    /* Space Cadet */
+    --primary-foreground: 30 50% 92%;
+
+    --secondary: 210 21% 47%;
+    /* Slate Gray */
+    --secondary-foreground: 30 50% 92%;
+
+    --muted: 30 50% 92%;
+    --muted-foreground: 210 21% 47%;
+
+    --accent: 22 32% 33%;
+    /* Coffee */
+    --accent-foreground: 30 50% 92%;
+
+    --destructive: 4 50% 30%;
+    /* Caput Mortuum */
+    --destructive-foreground: 30 50% 92%;
+
+    --border: 210 21% 80%;
+    --input: 210 21% 80%;
+    --ring: 220 37% 23%;
+
+    --chart-1: 220 37% 23%;
+    /* Space Cadet */
+    --chart-2: 210 21% 47%;
+    /* Slate Gray */
+    --chart-3: 34 52% 71%;
+    /* Tan */
+    --chart-4: 22 32% 33%;
+    /* Coffee */
+    --chart-5: 4 50% 30%;
+    /* Caput Mortuum */
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 220 37% 10%;
+    /* Dark Space Cadet */
+    --foreground: 30 50% 92%;
+    /* Soft Cream */
+
+    --card: 220 37% 12%;
+    --card-foreground: 30 50% 92%;
+
+    --popover: 220 37% 12%;
+    --popover-foreground: 30 50% 92%;
+
+    --primary: 34 52% 71%;
+    /* Tan */
+    --primary-foreground: 220 37% 10%;
+
+    --secondary: 210 21% 47%;
+    /* Slate Gray */
+    --secondary-foreground: 30 50% 92%;
+
+    --muted: 220 37% 14%;
+    --muted-foreground: 30 50% 92%;
+
+    --accent: 22 32% 33%;
+    /* Coffee */
+    --accent-foreground: 30 50% 92%;
+
+    --destructive: 4 50% 30%;
+    /* Caput Mortuum */
+    --destructive-foreground: 30 50% 92%;
+
+    --border: 210 21% 25%;
+    --input: 210 21% 25%;
+    --ring: 34 52% 71%;
+    /* Tan */
+
+    --chart-1: 220 37% 60%;
+    --chart-2: 210 21% 47%;
+    --chart-3: 34 52% 71%;
+    --chart-4: 22 32% 50%;
+    --chart-5: 4 50% 30%;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .toast-root {
+    margin: 0;
+    padding: 10px;
+    max-width: 320px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    background-color: hsl(var(--card));
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .toast-title {
+    font-weight: 600;
+  }
+
+  .toast-description {
+    font-size: 0.875rem;
+    color: var(--card-foreground);
+    margin-top: 0.25rem;
+  }
+
+  .toast-viewport {
+    @apply fixed z-[9999] flex justify-center p-2 max-w-[90vw];
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
