@@ -7,8 +7,17 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./shared/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+
   ],
-  safelist: ["toast-viewport", "toast-root"],
+  safelist: [
+    "toast-viewport",
+    "toast-root",
+    "bg-accent",
+    "text-accent-foreground",
+    "bg-dialog",
+    "text-dialog-foreground",
+  ],
+
   theme: {
     extend: {
       colors: {
@@ -47,6 +56,10 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        dialog: {
+          DEFAULT: "hsl(var(--dialog))",
+          foreground: "hsl(var(--dialog-foreground))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

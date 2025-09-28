@@ -19,35 +19,38 @@
     /* Space Cadet */
     --primary-foreground: 30 50% 92%;
 
-    --secondary: 210 21% 47%;
-    /* Slate Gray */
+    --secondary: 213 19% 58%;
+    /* Improved Slate Gray */
     --secondary-foreground: 30 50% 92%;
 
     --muted: 30 50% 92%;
-    --muted-foreground: 210 21% 47%;
+    --muted-foreground: 213 19% 58%;
 
     --accent: 22 32% 33%;
     /* Coffee */
     --accent-foreground: 30 50% 92%;
 
+    --highlight: 34 52% 71%;
+    /* Tan */
+    --highlight-foreground: 220 37% 23%;
+
     --destructive: 4 50% 30%;
     /* Caput Mortuum */
     --destructive-foreground: 30 50% 92%;
+
+    --dialog: 30 50% 97%;
+    /* Lighter cream than background */
+    --dialog-foreground: 220 37% 23%;
 
     --border: 210 21% 80%;
     --input: 210 21% 80%;
     --ring: 220 37% 23%;
 
     --chart-1: 220 37% 23%;
-    /* Space Cadet */
-    --chart-2: 210 21% 47%;
-    /* Slate Gray */
+    --chart-2: 213 19% 58%;
     --chart-3: 34 52% 71%;
-    /* Tan */
     --chart-4: 22 32% 33%;
-    /* Coffee */
     --chart-5: 4 50% 30%;
-    /* Caput Mortuum */
 
     --radius: 0.75rem;
   }
@@ -68,7 +71,7 @@
     /* Tan */
     --primary-foreground: 220 37% 10%;
 
-    --secondary: 210 21% 47%;
+    --secondary: 213 19% 58%;
     /* Slate Gray */
     --secondary-foreground: 30 50% 92%;
 
@@ -76,33 +79,46 @@
     --muted-foreground: 30 50% 92%;
 
     --accent: 22 32% 33%;
-    /* Coffee */
     --accent-foreground: 30 50% 92%;
 
     --destructive: 4 50% 30%;
-    /* Caput Mortuum */
     --destructive-foreground: 30 50% 92%;
+
+    --dialog: 220 37% 15%;
+    /* Slightly lighter than dark card */
+    --dialog-foreground: 30 50% 92%;
 
     --border: 210 21% 25%;
     --input: 210 21% 25%;
     --ring: 34 52% 71%;
-    /* Tan */
 
     --chart-1: 220 37% 60%;
-    --chart-2: 210 21% 47%;
+    --chart-2: 213 19% 58%;
     --chart-3: 34 52% 71%;
     --chart-4: 22 32% 50%;
     --chart-5: 4 50% 30%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply text-primary font-semibold;
+  }
+
+  p {
+    @apply leading-relaxed text-foreground;
+  }
+
+  a {
+    @apply text-accent underline;
   }
 }
 
@@ -125,7 +141,7 @@
 
   .toast-description {
     font-size: 0.875rem;
-    color: var(--card-foreground);
+    color: hsl(var(--card-foreground));
     margin-top: 0.25rem;
   }
 

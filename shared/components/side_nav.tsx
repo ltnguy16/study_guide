@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/shared";
-import { Menu, LayoutDashboard, ListCollapse } from "lucide-react";
+import { Menu, LayoutDashboard, ListCollapse, CalendarClockIcon } from "lucide-react";
 
 interface NavItem {
     label: string;
@@ -21,7 +21,7 @@ export default function SideNav() {
     const [isMidCollapse, setIsMidCollapse] = useState(false);
 
     const navLinks: NavItem[] = [
-        { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { label: "Timeline", href: "/timeline", icon: CalendarClockIcon },
     ];
 
     const toggleCollapsed = useCallback(() => {

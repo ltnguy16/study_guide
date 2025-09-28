@@ -39,7 +39,7 @@ export function LoginForm({
             });
             if (error) throw error;
 
-            router.push("/dashboard");
+            router.push("/timeline");
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : "An error occurred");
         } finally {
