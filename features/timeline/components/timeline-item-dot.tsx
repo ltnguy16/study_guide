@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Event } from "./timeline-item-data";
+import { TimelineEvent } from "./timeline-item-data";
 import { TimelineItemDialog } from "./timeline-item-dialog";
 import { Circle } from "lucide-react";  // Importing Lucide's circle icon
 
 interface TimelineItemDotProps {
-    event: Event;
+    event: TimelineEvent;
     top: number;
 }
 

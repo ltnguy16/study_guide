@@ -7,6 +7,7 @@ interface EditFieldDialogProps {
     initialValue: string;
     onSubmit: (newValue: string) => void;
     onCancel: () => void;
+    loading?: boolean;
 }
 
 export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
@@ -14,6 +15,7 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
     initialValue,
     onSubmit,
     onCancel,
+    loading,
 }) => {
     const [value, setValue] = useState(initialValue);
 
@@ -32,12 +34,14 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
                 <div className="flex justify-end space-x-2">
                     <button
                         onClick={onCancel}
+                        disabled={loading}
                         className="px-3 py-1 rounded-md bg-muted text-muted-foreground hover:opacity-80"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={() => onSubmit(value)}
+                        disabled={loading}
                         className="px-3 py-1 rounded-md bg-primary text-primary-foreground hover:opacity-90"
                     >
                         Submit

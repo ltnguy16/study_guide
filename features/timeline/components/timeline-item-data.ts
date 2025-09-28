@@ -3,20 +3,20 @@
 import { useEffect, useState } from "react";
 import { CreateBrowserClient } from "@/lib/supabase/client";
 
-export interface Event {
+export interface TimelineEvent {
     id: number;
-    name: string,
-    startDate: string;
-    endDate: string;
-    loiView: string;
-    myView: string;
-    sharedView: string;
+    name: string;
+    eventstart: string | null;
+    eventend: string | null;
+    loiview: string;
+    myview: string;
+    sharedview: string;
     location: string;
     images: string[];
 }
 
 export function useTimelineItemData() {
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<TimelineEvent[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,35 +34,31 @@ export function useTimelineItemData() {
             }
 
             const enrichedEvents = await Promise.all(
-                timelineEvents.map(async (event) => {
+                timelineEvents.map(async (event: any) => {
                     const { data: gallery, error: galleryError } = await supabase
                         .from("galleries")
                         .select("imagepath")
                         .eq("eventid", event.id);
 
-                    if (galleryError) console.error(`Gallery error for event ${event.id}`, galleryError);
+                    if (galleryError) {
+                        console.error(`Gallery error for event ${event.id}`, galleryError);
+                    }
 
-                    const images = gallery
-                        ? await Promise.all(
-                            gallery.map((img) => {
-                                return img.imagepath;
-                            })
-                        )
-                        : [];
+                    const images = gallery?.map((img) => img.imagepath).filter(Boolean) ?? [];
+
                     return {
                         id: event.id,
                         name: event.name,
-                        startDate: event.eventstart,
-                        endDate: event.eventend,
-                        loiView: event.loiview,
-                        myView: event.myview,
-                        sharedView: event.sharedview,
+                        eventstart: event.eventstart,
+                        eventend: event.eventend,
+                        loiview: event.loiview,
+                        myview: event.myview,
+                        sharedview: event.sharedview,
                         location: event.location,
-                        images: images.filter(Boolean),
+                        images,
                     };
                 })
             );
-
 
             setEvents(enrichedEvents);
             setLoading(false);
@@ -73,3 +69,4 @@ export function useTimelineItemData() {
 
     return { events, loading };
 }
+

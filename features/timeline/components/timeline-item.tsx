@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Event } from "./timeline-item-data";
+import { TimelineEvent } from "./timeline-item-data";
 import { TimelineItemDot } from "./timeline-item-dot";
 
 interface TimelineItemProps {
-    events: Event[];
+    events: TimelineEvent[];
 }
 
 const TIMELINE_HEIGHT = 900;
@@ -61,8 +61,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ events }) => {
 
             {/* Event bars with dots */}
             {events.map((event) => {
-                const startTop = getPosition(event.startDate);
-                const endTop = getPosition(event.endDate);
+                const startTop = getPosition(event.eventstart!);
+                const endTop = getPosition(event.eventend!);
                 const barHeight = Math.max(endTop - startTop, 4);
                 const dotTop = startTop + barHeight / 2;
 
