@@ -23,18 +23,22 @@ const SecureImage: React.FC<SecureImageProps> = ({
     backgroundColor = "black", // default black background
 }) => {
     const [signedUrl, setSignedUrl] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true); // Add a loading state
 
     useEffect(() => {
         const fetchUrl = async () => {
             if (path.startsWith("http")) {
-                setSignedUrl(path);
+                setSignedUrl(path); // Use the provided URL directly if it's already a full URL
+                setLoading(false); // No need to load if the URL is already valid
             } else {
                 try {
-                    const url = await FetchSignedImageUrl(path, 3600);
+                    const url = await FetchSignedImageUrl(path, 3600); // Fetch the signed URL
                     setSignedUrl(url);
+                    setLoading(false); // Set loading to false when the URL is ready
                 } catch (error) {
                     console.error("Error generating signed URL:", error);
-                    setSignedUrl(null);
+                    setSignedUrl(null); // Handle error gracefully
+                    setLoading(false); // Stop loading even on error
                 }
             }
         };
@@ -42,9 +46,9 @@ const SecureImage: React.FC<SecureImageProps> = ({
         if (path) {
             fetchUrl();
         }
-    }, [path]);
+    }, [path]); // Dependency array ensures this effect runs when the `path` changes
 
-    if (!signedUrl) {
+    if (loading || !signedUrl) {
         return (
             <div
                 className={`flex items-center justify-center text-xs text-gray-400 bg-gray-100 ${className}`}

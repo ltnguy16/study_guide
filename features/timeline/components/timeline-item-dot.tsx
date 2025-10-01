@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { TimelineEvent } from "./timeline-item-data";
 import { TimelineItemDialog } from "./timeline-item-dialog";
@@ -8,12 +6,18 @@ import { Circle } from "lucide-react";
 interface TimelineItemDotProps {
     event: TimelineEvent;
     top: number;
+    onEventUpdate: (updatedEvent: TimelineEvent) => void;
 }
 
-export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) => {
+export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top, onEventUpdate }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [position, setPosition] = useState<"above" | "below">("below");
+    const [localEvent, setLocalEvent] = useState(event); // Local state for event
     const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        setLocalEvent(event); // Update local event when the event prop changes (sync with parent)
+    }, [event]);
 
     useEffect(() => {
         const checkPosition = () => {
@@ -36,16 +40,29 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) 
     const handleMouseEnter = () => {
         if (hideTimeoutRef.current) {
             clearTimeout(hideTimeoutRef.current);
-            hideTimeoutRef.current = null;
+            hideTimeoutRef.current = null; // Clear the previous timeout
         }
-        setIsDialogOpen(true);
+        setIsDialogOpen(true); // Show the dialog when the mouse enters
     };
 
     const handleMouseLeave = () => {
+        // Set a delay before hiding the dialog
         hideTimeoutRef.current = setTimeout(() => {
-            setIsDialogOpen(false);
+            setIsDialogOpen(false); // Hide the dialog after the delay
         }, 200); // 200ms delay before hiding
     };
+
+    const handleRemoveImage = (path: string) => {
+        const updatedEvent = { ...localEvent };
+        updatedEvent.images = updatedEvent.images.filter((img) => img !== path); // Remove image from event
+        setLocalEvent(updatedEvent); // Update localEvent state
+
+        console.log("Updated Event after removal:", updatedEvent);  // Debugging the updated event
+
+        // Notify parent to update its state
+        onEventUpdate(updatedEvent); // Propagate the update to parent
+    };
+
 
     return (
         <div
@@ -88,7 +105,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) 
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <TimelineItemDialog event={event} />
+                    <TimelineItemDialog event={localEvent} onEventUpdate={setLocalEvent} />
                 </div>
             )}
         </div>

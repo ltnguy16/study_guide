@@ -1,4 +1,5 @@
 import { CreateBrowserClient } from "@/lib/supabase/client";
+import { config } from "@/shared/components/config";
 
 /**
  * Generates a signed URL for a private image stored in the "timeline-images" bucket.
@@ -25,7 +26,7 @@ export async function FetchSignedImageUrl(
     const fullPath = `collections/${relativePath}`;
 
     const { data, error } = await supabase.storage
-        .from("timeline-images")
+        .from(config.timelineBucket)
         .createSignedUrl(fullPath, expireTime);
 
     if (error) {

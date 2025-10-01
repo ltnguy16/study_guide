@@ -1,43 +1,47 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import next/navigation for App Router
+import React, { useState, useEffect } from "react";
 import { TimelineEvent } from "./timeline-item-data";
-import SecureImage from "@/shared/components/ui/sercure-image";
 import { EditDateRangeDialog, EditFieldDialog, formatDate } from "@/shared";
-import { UpsertTimelineDates, UpsertTimelineField } from "@/shared/service/upsert/update-timeline-field";
+import { UpsertTimelineField, UpsertTimelineDates } from "@/shared/service/upsert/update-timeline-field";
 import { FetchEventById } from "../service/fetch/fetch-event-by-id";
+import SecureImage from "@/shared/components/ui/sercure-image";
+import { Trash } from "lucide-react"; // Import trash icon
+import { DeleteFromGallery } from "../service/delete/delete-from-gallery";
 
 interface TimelineItemDialogProps {
     event: TimelineEvent;
+    onEventUpdate: (updatedEvent: TimelineEvent) => void;
 }
 
 type FieldKey = keyof Pick<TimelineEvent, "loiview" | "myview" | "sharedview" | "location" | "name">;
 
-export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
-    event,
-}) => {
+export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, onEventUpdate }) => {
+    const [localEvent, setLocalEvent] = useState(event);
     const [activeField, setActiveField] = useState<FieldKey | null>(null);
     const [editDates, setEditDates] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [localEvent, setLocalEvent] = useState<TimelineEvent>(event);
 
-    // Only reset localEvent when the prop `event` changes
+    const router = useRouter(); // Initialize the router for navigation
+
     useEffect(() => {
-        setLocalEvent(event);
+        setLocalEvent(event); // Update local event if prop changes
     }, [event]);
 
-    // Shared refresh function
-    const refreshEvent = async () => {
-        const refreshed = await FetchEventById(localEvent.id);
-        if (refreshed) setLocalEvent(refreshed);
+    // Handle image selection navigation
+    const handleNavigateToImageSelection = () => {
+        router.push(`/timeline/image-selection?eventId=${localEvent.id}`);
     };
 
-    // Submit handler for text fields and title
+    // Handle text field update (e.g., name, loiview)
     const handleSubmit = async (field: FieldKey, newValue: TimelineEvent[FieldKey]) => {
+        setLoading(true);
         try {
-            setLoading(true);
             await UpsertTimelineField(localEvent, field, newValue);
-            await refreshEvent();
+            const refreshedEvent = await FetchEventById(localEvent.id);
+            if (refreshedEvent) {
+                setLocalEvent(refreshedEvent);
+                onEventUpdate(refreshedEvent);
+            }
             setActiveField(null);
         } catch (error) {
             console.error("Failed to update field:", error);
@@ -47,12 +51,16 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
         }
     };
 
-    // Submit handler for dates
+    // Handle date range updates
     const handleDateSubmit = async (startDate: string, endDate: string) => {
+        setLoading(true);
         try {
-            setLoading(true);
             await UpsertTimelineDates(localEvent, startDate, endDate);
-            await refreshEvent();
+            const refreshedEvent = await FetchEventById(localEvent.id);
+            if (refreshedEvent) {
+                setLocalEvent(refreshedEvent);
+                onEventUpdate(refreshedEvent);
+            }
             setEditDates(false);
         } catch (error) {
             console.error("Failed to update dates:", error);
@@ -62,6 +70,23 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
         }
     };
 
+    const handleRemoveImage = async (path: string) => {
+
+        try {
+            await DeleteFromGallery(localEvent.id, path);
+            const updatedEvent = { ...localEvent };
+            updatedEvent.images = updatedEvent.images.filter((img) => img !== path);
+            setLocalEvent(updatedEvent);
+            onEventUpdate(updatedEvent);
+        } catch (error) {
+            // Handle error and prevent UI update if deletion fails
+            console.error("Error during image removal:", error);
+            alert("Failed to remove image. Please try again.");
+        }
+    };
+
+
+    // Fields for the dialog (name, loiview, myview, etc.)
     const fieldItems: { key: FieldKey; label: string; value: string }[] = [
         { key: "loiview", label: "LoFi's View", value: localEvent.loiview },
         { key: "myview", label: "My's View", value: localEvent.myview },
@@ -70,9 +95,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
     ];
 
     return (
-        <div
-            className="relative rounded-xl bg-dialog text-dialog-foreground shadow-lg p-6 border border-border space-y-4 w-full max-w-md"
-        >
+        <div className="relative rounded-xl bg-dialog text-dialog-foreground shadow-lg p-6 border border-border space-y-4 w-full max-w-md">
             {/* Date Range */}
             <div className="flex items-start justify-between text-xs text-muted-foreground font-semibold tracking-wider uppercase">
                 <span>
@@ -123,20 +146,37 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
                 ))}
             </div>
 
-            {/* Images */}
+            {/* Images with Add Button First */}
             <div className="flex space-x-3 overflow-x-auto mb-4 scrollbar-thin scrollbar-thumb-accent scrollbar-track-card">
-                {Array.isArray(localEvent.images) && localEvent.images.length > 0 ? (
-                    localEvent.images.map((path, idx) => (
+                {/* Add Image Button */}
+                <button
+                    onClick={handleNavigateToImageSelection}
+                    disabled={loading}
+                    className="flex items-center justify-center w-24 h-24 bg-gray-200 rounded-md hover:bg-gray-300 text-accent cursor-pointer shrink-0"
+                    aria-label="Add images"
+                >
+                    +
+                </button>
+                {/* Existing Images */}
+                {localEvent.images.map((path, idx) => (
+                    <div key={idx} className="relative w-24 h-24 bg-gray-200 rounded-md overflow-hidden">
+                        {/* Trash Button */}
+                        <button
+                            onClick={() => handleRemoveImage(path)}
+                            disabled={loading}
+                            className="absolute top-0 right-0 p-2 bg-gray-700 rounded-full text-white hover:bg-gray-800 transition-all duration-200 ease-in-out"
+                            aria-label={`Remove ${path}`}
+                        >
+                            <Trash className="h-5 w-5" />
+                        </button>
                         <SecureImage
-                            key={idx}
                             path={`collections/${path}`}
                             alt={`event-img-${idx}`}
-                            size={120}
+                            size={96}
+                            className="rounded-md"
                         />
-                    ))
-                ) : (
-                    <p className="text-sm text-muted-foreground">No images available</p>
-                )}
+                    </div>
+                ))}
             </div>
 
             {/* Edit Text Field Dialog */}
@@ -153,16 +193,8 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
             {/* Edit Date Range Dialog */}
             {editDates && (
                 <EditDateRangeDialog
-                    initialStartDate={
-                        localEvent.eventstart
-                            ? new Date(localEvent.eventstart).toISOString().split("T")[0]
-                            : ""
-                    }
-                    initialEndDate={
-                        localEvent.eventend
-                            ? new Date(localEvent.eventend).toISOString().split("T")[0]
-                            : ""
-                    }
+                    initialStartDate={localEvent.eventstart ? new Date(localEvent.eventstart).toISOString().split("T")[0] : ""}
+                    initialEndDate={localEvent.eventend ? new Date(localEvent.eventend).toISOString().split("T")[0] : ""}
                     onSubmit={handleDateSubmit}
                     onCancel={() => setEditDates(false)}
                     loading={loading}
