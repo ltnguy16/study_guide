@@ -95,7 +95,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
     ];
 
     return (
-        <div className="relative rounded-xl bg-dialog text-dialog-foreground shadow-lg p-6 border border-border space-y-4 w-full max-w-md">
+        <div className="relative w-full max-w-md sm:max-w-xs rounded-xl bg-dialog text-dialog-foreground shadow-lg p-4 sm:p-6 border border-border space-y-4">
             {/* Date Range */}
             <div className="flex items-start justify-between text-xs text-muted-foreground font-semibold tracking-wider uppercase">
                 <span>
@@ -164,7 +164,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                         <SecureImage
                             path={`collections/${path}`}
                             alt={`event-img-${idx}`}
-                            size={96}
+                            size={80}
                             className="rounded-md"
                         />
 

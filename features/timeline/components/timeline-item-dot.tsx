@@ -6,10 +6,9 @@ import { Circle } from "lucide-react";
 interface TimelineItemDotProps {
     event: TimelineEvent;
     top: number;
-    onEventUpdate: (updatedEvent: TimelineEvent) => void;
 }
 
-export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top, onEventUpdate }) => {
+export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [position, setPosition] = useState<"above" | "below">("below");
     const [localEvent, setLocalEvent] = useState(event); // Local state for event
@@ -37,30 +36,8 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top, on
         return () => window.removeEventListener("resize", checkPosition);
     }, [top]);
 
-    const handleMouseEnter = () => {
-        if (hideTimeoutRef.current) {
-            clearTimeout(hideTimeoutRef.current);
-            hideTimeoutRef.current = null; // Clear the previous timeout
-        }
-        setIsDialogOpen(true); // Show the dialog when the mouse enters
-    };
-
-    const handleMouseLeave = () => {
-        // Set a delay before hiding the dialog
-        hideTimeoutRef.current = setTimeout(() => {
-            setIsDialogOpen(false); // Hide the dialog after the delay
-        }, 200); // 200ms delay before hiding
-    };
-
-    const handleRemoveImage = (path: string) => {
-        const updatedEvent = { ...localEvent };
-        updatedEvent.images = updatedEvent.images.filter((img) => img !== path); // Remove image from event
-        setLocalEvent(updatedEvent); // Update localEvent state
-
-        console.log("Updated Event after removal:", updatedEvent);  // Debugging the updated event
-
-        // Notify parent to update its state
-        onEventUpdate(updatedEvent); // Propagate the update to parent
+    const toggleDialog = () => {
+        setIsDialogOpen((prev) => !prev);
     };
 
 
@@ -72,8 +49,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top, on
                 left: "0px",
                 zIndex: 60,
             }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onClick={toggleDialog}
         >
             {/* Dot */}
             <div
@@ -102,8 +78,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top, on
                         left: "30px",
                         zIndex: 50,
                     }}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
+                    onClick={toggleDialog}
                 >
                     <TimelineItemDialog event={localEvent} onEventUpdate={setLocalEvent} />
                 </div>

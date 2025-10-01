@@ -152,3 +152,9 @@
     transform: translateX(-50%);
   }
 }
+
+@layer components {
+  .scrollable-container {
+    @apply max-h-[70vh] overflow-y-auto;
+  }
+}

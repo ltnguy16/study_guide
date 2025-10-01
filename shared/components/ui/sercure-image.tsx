@@ -51,13 +51,23 @@ const SecureImage: React.FC<SecureImageProps> = ({
     if (loading || !signedUrl) {
         return (
             <div
-                className={`flex items-center justify-center text-xs text-gray-400 bg-gray-100 ${className}`}
-                style={{ width: size, height: size, borderRadius, backgroundColor }}
+                className={className}
+                style={{
+                    width: size,
+                    height: size,
+                    borderRadius,
+                    overflow: "hidden",
+                    backgroundColor,
+                    display: "inline-block",
+                }}
             >
-                <Spinner />
+                <div className="flex items-center justify-center w-full h-full">
+                    <Spinner />
+                </div>
             </div>
         );
     }
+
 
     return (
         <div
