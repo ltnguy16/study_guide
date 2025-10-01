@@ -59,7 +59,7 @@ export function LoginForm({
                 <CardContent>
                     <form onSubmit={handleLogin} className="flex flex-col gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label className="p-2" htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -70,8 +70,8 @@ export function LoginForm({
                             />
                         </div>
                         <div className="grid gap-2 py-2">
-                            <div className="flex items-center">
-                                <Label htmlFor="password">Password</Label>
+                            <div className="flex items-center ">
+                                <Label className="p-2" htmlFor="password">Password</Label>
                                 <Link
                                     href="/auth/forgot-password"
                                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"

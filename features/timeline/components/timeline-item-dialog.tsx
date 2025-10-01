@@ -152,29 +152,34 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                 <button
                     onClick={handleNavigateToImageSelection}
                     disabled={loading}
-                    className="flex items-center justify-center w-24 h-24 bg-gray-200 rounded-md hover:bg-gray-300 text-accent cursor-pointer shrink-0"
+                    className="flex items-center justify-center w-24 h-24 bg-gray-200 rounded-md hover:bg-gray-300 text-accent cursor-pointer shrink-0 shadow-lg px-8 border border-border "
                     aria-label="Add images"
                 >
                     +
                 </button>
                 {/* Existing Images */}
                 {localEvent.images.map((path, idx) => (
-                    <div key={idx} className="relative w-24 h-24 bg-gray-200 rounded-md overflow-hidden">
-                        {/* Trash Button */}
-                        <button
-                            onClick={() => handleRemoveImage(path)}
-                            disabled={loading}
-                            className="absolute top-0 right-0 p-2 bg-gray-700 rounded-full text-white hover:bg-gray-800 transition-all duration-200 ease-in-out"
-                            aria-label={`Remove ${path}`}
-                        >
-                            <Trash className="h-5 w-5" />
-                        </button>
+                    <div key={idx} className="relative w-24 h-24 bg-gray-200 rounded-md overflow-hidden shadow-lg p-2 border border-border">
+                        {/* Image */}
                         <SecureImage
                             path={`collections/${path}`}
                             alt={`event-img-${idx}`}
                             size={96}
                             className="rounded-md"
                         />
+
+                        {/* Divider */}
+                        <div className="absolute inset-x-0 bottom-0 border-t border-gray-300"></div>
+
+                        {/* Trash Button */}
+                        <div
+                            onClick={() => handleRemoveImage(path)}
+                            role="button"
+                            aria-label={`Remove ${path}`}
+                            className="absolute top-2 right-2 flex items-center justify-center w-8 h-8 bg-gray-700 rounded-full text-white hover:bg-gray-800 transition-all duration-200 ease-in-out cursor-pointer"
+                        >
+                            <Trash className="h-4 w-4" />
+                        </div>
                     </div>
                 ))}
             </div>
