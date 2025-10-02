@@ -57,9 +57,11 @@ export function LoginForm({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleLogin} className="flex flex-col gap-6">
+                    <form onSubmit={handleLogin} className="flex flex-col gap-6" noValidate>
                         <div className="grid gap-2">
-                            <Label className="p-2" htmlFor="email">Email</Label>
+                            <Label className="p-2" htmlFor="email">
+                                Email
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -67,14 +69,17 @@ export function LoginForm({
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                aria-invalid={!!error}
                             />
                         </div>
                         <div className="grid gap-2 py-2">
-                            <div className="flex items-center ">
-                                <Label className="p-2" htmlFor="password">Password</Label>
+                            <div className="flex items-center">
+                                <Label className="p-2" htmlFor="password">
+                                    Password
+                                </Label>
                                 <Link
                                     href="/auth/forgot-password"
-                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-accent"
                                 >
                                     Forgot your password?
                                 </Link>
@@ -85,14 +90,16 @@ export function LoginForm({
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                aria-invalid={!!error}
                             />
                         </div>
-                        {error && <p className="text-sm text-red-500">{error}</p>}
+                        {error && <p className="text-sm text-destructive">{error}</p>}
 
                         <Button
                             type="submit"
-                            className="w-full mt-6 "
+                            className="w-full mt-6"
                             disabled={isLoading}
+                            aria-busy={isLoading}
                         >
                             {isLoading ? "Logging in..." : "Login"}
                         </Button>

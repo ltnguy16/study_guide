@@ -22,7 +22,7 @@ const geistSans = Geist({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} antialiased bg-background text-foreground`}>
         {/* Flex container to hold sidebar and main content */}
         <div className="flex min-h-screen">
           {/* Main content grows to fill remaining width */}
