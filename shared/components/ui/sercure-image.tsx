@@ -87,10 +87,12 @@ const SecureImage: React.FC<SecureImageProps> = ({
                 alt={alt}
                 width={size}
                 height={size}
+                loading="lazy"
                 style={{
-                    objectFit: "cover",  // Ensures the image fills the container
+                    objectFit: "contain",  // Ensures the image fills the container
                     width: "100%",
                     height: "100%",
+                    backgroundColor: "inherit"
                 }}
                 unoptimized
             />

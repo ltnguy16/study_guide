@@ -6,41 +6,93 @@ import { TimelineItemDot } from "./timeline-item-dot";
 
 interface TimelineItemProps {
     events: TimelineEvent[];
+    openDotId: number | null;
+    hideDots: boolean;
+    onOpen: (id: number) => void;
+    onClose: () => void;
 }
 
 const TIMELINE_HEIGHT = 900;
 const TIMELINE_START = new Date("2020-01-01");
 const TIMELINE_END = new Date("2025-12-31");
 
+// Helper function to get position based on date
 function getPosition(dateStr: string) {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
-        console.warn("⚠️ Invalid date format:", dateStr);
+        console.warn("⚠️ Invalid date:", dateStr);
         return 0;
     }
-
     const totalDuration = TIMELINE_END.getTime() - TIMELINE_START.getTime();
     const offset = date.getTime() - TIMELINE_START.getTime();
-    return (offset / totalDuration) * TIMELINE_HEIGHT;
+    const pos = (offset / totalDuration) * TIMELINE_HEIGHT;
+
+    console.log(`Date: ${dateStr}, Offset: ${offset}, Position: ${pos}`);
+
+    return pos;
 }
 
-export const TimelineItem: React.FC<TimelineItemProps> = ({ events }) => {
+
+// Define the year start dates
+const years = [
+    { year: 2020, date: "2020-01-01" },
+    { year: 2021, date: "2021-01-01" },
+    { year: 2022, date: "2022-01-01" },
+    { year: 2023, date: "2023-01-01" },
+    { year: 2024, date: "2024-01-01" },
+    { year: 2025, date: "2025-01-01" },
+];
+
+// Quarter start dates
+const quarterDates = [
+    { label: "Q1", date: "2020-01-01" },
+    { label: "Q2", date: "2020-04-01" },
+    { label: "Q3", date: "2020-07-01" },
+    { label: "Q4", date: "2020-10-01" },
+    { label: "Q1", date: "2021-01-01" },
+    { label: "Q2", date: "2021-04-01" },
+    { label: "Q3", date: "2021-07-01" },
+    { label: "Q4", date: "2021-10-01" },
+    { label: "Q1", date: "2022-01-01" },
+    { label: "Q2", date: "2022-04-01" },
+    { label: "Q3", date: "2022-07-01" },
+    { label: "Q4", date: "2022-10-01" },
+    { label: "Q1", date: "2023-01-01" },
+    { label: "Q2", date: "2023-04-01" },
+    { label: "Q3", date: "2023-07-01" },
+    { label: "Q4", date: "2023-10-01" },
+    { label: "Q1", date: "2024-01-01" },
+    { label: "Q2", date: "2024-04-01" },
+    { label: "Q3", date: "2024-07-01" },
+    { label: "Q4", date: "2024-10-01" },
+    { label: "Q1", date: "2025-01-01" },
+    { label: "Q2", date: "2025-04-01" },
+    { label: "Q3", date: "2025-07-01" },
+    { label: "Q4", date: "2025-10-01" },
+];
+
+
+export const TimelineItem: React.FC<TimelineItemProps> = ({
+    events,
+    openDotId,
+    hideDots,
+    onOpen,
+    onClose,
+}) => {
     return (
         <div
             style={{
                 position: "relative",
                 height: `${TIMELINE_HEIGHT}px`,
                 width: "256px",
-                borderLeft: "4px solid hsl(var(--primary))", // Space Cadet from global CSS
+                borderLeft: "4px solid hsl(var(--primary))",
                 marginLeft: "40px",
                 userSelect: "none",
-
             }}
         >
-            {/* Year markers */}
-            {[...Array(6)].map((_, i) => {
-                const year = 2020 + i;
-                const top = (i / 5) * TIMELINE_HEIGHT;
+            {/* Year labels aligned precisely */}
+            {years.map(({ year, date }) => {
+                const top = getPosition(date);
                 return (
                     <div
                         key={year}
@@ -48,6 +100,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ events }) => {
                             position: "absolute",
                             left: "-80px",
                             top: `${top}px`,
+                            transform: "translateY(-50%)",
                             color: "#4b5563",
                             fontWeight: 600,
                             fontSize: "14px",
@@ -59,31 +112,78 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ events }) => {
                 );
             })}
 
-            {/* Event bars with dots */}
+
+            {/* Quarter labels and dashes aligned to specific dates */}
+            {quarterDates.map((q) => {
+                const top = getPosition(q.date);
+                return (
+                    <React.Fragment key={q.label + q.date}>
+                        {/* Dash line extending from the main line */}
+                        <div
+                            style={{
+                                position: "absolute",
+                                left: "-12px",
+                                top: `${top}px`,
+                                width: "12px",
+                                height: "2px",
+                                backgroundColor: "#9ca3af",
+                                borderRadius: "1px",
+                                transform: "translateY(-50%)",
+                            }}
+                        />
+                        {/* Quarter label below the dash */}
+                        <div
+                            style={{
+                                position: "absolute",
+                                left: "-50px",
+                                top: `${top}px`,
+                                transform: "translateY(-50%)",
+                                width: "40px",
+                                textAlign: "center",
+                                fontSize: "11px",
+                                color: "#6b7280",
+                                fontWeight: 500,
+                                userSelect: "none",
+                            }}
+                        >
+                            {q.label}
+                        </div>
+                    </React.Fragment>
+                );
+            })}
+
+            {/* Events with dots and bars */}
             {events.map((event) => {
                 const startTop = getPosition(event.eventstart!);
                 const endTop = getPosition(event.eventend!);
                 const barHeight = Math.max(endTop - startTop, 4);
                 const dotTop = startTop + barHeight / 2;
-
                 return (
                     <React.Fragment key={event.id}>
-                        {/* Event Bar */}
+                        {/* Bar */}
                         <div
                             style={{
-                                position: "absolute",
-                                left: "0px",
+                                position: "absolute", // must be absolute
+                                left: "7px", // (18 / 2) - (4 / 2) = 9 - 2 = 7px to center under dot
                                 top: `${startTop}px`,
                                 height: `${barHeight}px`,
                                 width: "4px",
-                                backgroundColor: "hsl(var(--destructive))", // Caput Mortuum from global CSS
-                                marginLeft: "-2px",
+                                backgroundColor: "hsl(var(--destructive))",
                                 borderRadius: "2px",
                             }}
                         />
 
-                        {/* Dot (positioned separately, not inside bar) */}
-                        <TimelineItemDot event={event} top={dotTop} />
+                        {/* Dot with controlled open state */}
+                        {!hideDots && (
+                            <TimelineItemDot
+                                event={event}
+                                top={dotTop}
+                                isOpen={openDotId === event.id}
+                                onOpen={() => onOpen(event.id)}
+                                onClose={onClose}
+                            />
+                        )}
+
                     </React.Fragment>
                 );
             })}

@@ -19,54 +19,54 @@ export function useTimelineItemData() {
     const [events, setEvents] = useState<TimelineEvent[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchData() {
-            const supabase = CreateBrowserClient();
+    const fetchData = async () => {
+        const supabase = CreateBrowserClient();
 
-            const { data: timelineEvents, error: eventsError } = await supabase
-                .from("timeline_events")
-                .select("*");
+        const { data: timelineEvents, error: eventsError } = await supabase
+            .from("timeline_events")
+            .select("*");
 
-            if (eventsError || !timelineEvents) {
-                console.error("Error fetching timeline events:", eventsError);
-                setLoading(false);
-                return;
-            }
-
-            const enrichedEvents = await Promise.all(
-                timelineEvents.map(async (event: any) => {
-                    const { data: gallery, error: galleryError } = await supabase
-                        .from("galleries")
-                        .select("imagepath")
-                        .eq("eventid", event.id);
-
-                    if (galleryError) {
-                        console.error(`Gallery error for event ${event.id}`, galleryError);
-                    }
-
-                    const images = gallery?.map((img) => img.imagepath).filter(Boolean) ?? [];
-
-                    return {
-                        id: event.id,
-                        name: event.name,
-                        eventstart: event.eventstart,
-                        eventend: event.eventend,
-                        loiview: event.loiview,
-                        myview: event.myview,
-                        sharedview: event.sharedview,
-                        location: event.location,
-                        images,
-                    };
-                })
-            );
-
-            setEvents(enrichedEvents);
+        if (eventsError || !timelineEvents) {
+            console.error("Error fetching timeline events:", eventsError);
             setLoading(false);
+            return;
         }
 
+        const enrichedEvents = await Promise.all(
+            timelineEvents.map(async (event: any) => {
+                const { data: gallery, error: galleryError } = await supabase
+                    .from("galleries")
+                    .select("imagepath")
+                    .eq("eventid", event.id);
+
+                if (galleryError) {
+                    console.error(`Gallery error for event ${event.id}`, galleryError);
+                }
+
+                const images = gallery?.map((img) => img.imagepath).filter(Boolean) ?? [];
+
+                return {
+                    id: event.id,
+                    name: event.name,
+                    eventstart: event.eventstart,
+                    eventend: event.eventend,
+                    loiview: event.loiview,
+                    myview: event.myview,
+                    sharedview: event.sharedview,
+                    location: event.location,
+                    images,
+                };
+            })
+        );
+
+        setEvents(enrichedEvents);
+        setLoading(false);
+    };
+
+    // Run fetchData on initial load
+    useEffect(() => {
         fetchData();
     }, []);
 
-    return { events, loading };
+    return { events, loading, fetchData }; // <-- include fetchData here
 }
-

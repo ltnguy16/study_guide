@@ -2,57 +2,94 @@ import React, { useState, useEffect, useRef } from "react";
 import { TimelineEvent } from "./timeline-item-data";
 import { TimelineItemDialog } from "./timeline-item-dialog";
 import { Circle } from "lucide-react";
+import { TimelineDialogPortal } from "./timeline-dialog-portal";
 
 interface TimelineItemDotProps {
     event: TimelineEvent;
     top: number;
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
 }
 
-export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [position, setPosition] = useState<"above" | "below">("below");
-    const [localEvent, setLocalEvent] = useState(event); // Local state for event
-    const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
+    event,
+    top,
+    isOpen,
+    onOpen,
+    onClose,
+}) => {
+    const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+    const dotRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        setLocalEvent(event); // Update local event when the event prop changes (sync with parent)
-    }, [event]);
-
-    useEffect(() => {
-        const checkPosition = () => {
-            const dialogHeight = 320;
-            const buffer = 20;
-            const spaceBelow = window.innerHeight - top;
-
-            if (spaceBelow < dialogHeight + buffer) {
-                setPosition("above");
-            } else {
-                setPosition("below");
-            }
-        };
-
-        checkPosition();
-        window.addEventListener("resize", checkPosition);
-        return () => window.removeEventListener("resize", checkPosition);
-    }, [top]);
-
-    const toggleDialog = () => {
-        setIsDialogOpen((prev) => !prev);
+    // Compute and set dialog position based on dot position
+    const updatePosition = () => {
+        if (dotRef.current) {
+            const rect = dotRef.current.getBoundingClientRect();
+            setPosition({
+                top: rect.top + rect.height / 2,
+                left: rect.right + 8,
+            });
+        }
     };
 
+    // Run on open to set initial position
+    useEffect(() => {
+        if (isOpen) {
+            updatePosition();
+
+            // Update position on scroll and resize to follow dot
+            window.addEventListener("scroll", updatePosition);
+            window.addEventListener("resize", updatePosition);
+
+            return () => {
+                window.removeEventListener("scroll", updatePosition);
+                window.removeEventListener("resize", updatePosition);
+            };
+        } else {
+            setPosition(null);
+        }
+    }, [isOpen]);
+
+    // Close dialog on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                isOpen &&
+                dotRef.current &&
+                !dotRef.current.contains(e.target as Node) &&
+                !(document.getElementById("timeline-dialog")?.contains(e.target as Node))
+            ) {
+                onClose();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isOpen, onClose]);
+
+    const toggle = () => {
+        if (isOpen) {
+            onClose();
+        } else {
+            updatePosition();
+            onOpen();
+        }
+    };
 
     return (
         <div
             style={{
                 position: "absolute",
-                top: `${top}px`,
+                top: `${top}px`, // This is dotTop from parent
                 left: "0px",
                 zIndex: 60,
+                transform: "translateY(-50%)", // <-- vertically center
             }}
-            onClick={toggleDialog}
+
         >
             {/* Dot */}
             <div
+                ref={dotRef}
                 style={{
                     display: "flex",
                     justifyContent: "center",
@@ -65,23 +102,35 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({ event, top }) 
                     cursor: "pointer",
                     transition: "background-color 0.2s ease",
                 }}
+                onClick={toggle}
             >
                 <Circle color="white" size={16} />
             </div>
 
             {/* Dialog */}
-            {isDialogOpen && (
-                <div
-                    style={{
-                        position: "absolute",
-                        top: position === "above" ? `-330px` : `30px`,
-                        left: "30px",
-                        zIndex: 50,
-                    }}
-                    onClick={toggleDialog}
-                >
-                    <TimelineItemDialog event={localEvent} onEventUpdate={setLocalEvent} />
-                </div>
+            {isOpen && position && (
+                <TimelineDialogPortal>
+                    <div
+                        id="timeline-dialog"
+                        style={{
+                            position: "fixed",
+                            top: position.top,
+                            left: position.left,
+                            transform: "translate(0, -50%)",
+                            zIndex: 100,
+                            backgroundColor: "white",
+                            borderRadius: "8px",
+                            padding: "24px 24px 24px 10px",
+                            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+                            maxWidth: "calc(100vw - " + (position.left + 24) + "px)",
+                            minWidth: "250px",
+                            overflowX: "auto",
+                            maxHeight: "90vh",
+                        }}
+                    >
+                        <TimelineItemDialog event={event} onEventUpdate={() => { }} />
+                    </div>
+                </TimelineDialogPortal>
             )}
         </div>
     );
