@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import AddTimelineDialog from "./add-timeline-dialog";
 import { TimelineEvent } from "./timeline-item-data";
 import { UpsertTimeline } from "../service/upsert/upsert-event";
+import { Plus, X } from "lucide-react";
 
 interface AddTimelineDialogContainerProps {
     onAdd: (newEvent: TimelineEvent) => Promise<void>;
@@ -81,13 +82,17 @@ function AddTimelineDialogContainer({
                     onMouseDown={toggleOpen}
                     aria-label="Toggle add new record dialog"
                     className={`fixed bottom-6 right-6 z-[1200] rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 transition
-            ${isOpen
+                        ${isOpen
                             ? "bg-transparent border-2 border-highlight text-highlight shadow-md hover:bg-highlight hover:text-white w-10 h-10 text-2xl sm:w-14 sm:h-14 sm:text-4xl"
                             : "bg-highlight text-white shadow-lg border-2 border-highlight hover:brightness-90 w-14 h-14 text-4xl"
                         }`}
                     type="button"
                 >
-                    <span className="leading-none select-none">+</span>
+                    {isOpen
+                        ? <X />
+                        : <Plus />
+                    }
+
                 </button>
             ) : null}
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { CreateBrowserClient } from "@/lib/supabase/client";
 import { ImageUpscale } from "lucide-react";
 import { FetchEventImages } from "@/features/timeline/service/fetch/fetch-event-images";
@@ -9,15 +9,16 @@ import { FetchSignedImageUrl } from "@/shared/service/fetch/fetch-signed-image-u
 
 export default function ImageSelectionPage() {
     const searchParams = useSearchParams();
-    const eventId = searchParams.get("eventId");
-    const [availableImages, setAvailableImages] = useState<string[]>([]);
-    const [totalImages, setTotalImages] = useState<number>(0);
-    const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
-    const [loading, setLoading] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [imagesPerPage] = useState<number>(10);
-    const [signedImageUrls, setSignedImageUrls] = useState<Map<string, string>>(new Map());
     const router = useRouter();
+    const eventId = searchParams.get("eventId");
+
+    const [availableImages, setAvailableImages] = useState<string[]>([]);
+    const [totalImages, setTotalImages] = useState(0);
+    const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const imagesPerPage = 10;
+    const [signedImageUrls, setSignedImageUrls] = useState<Map<string, string>>(new Map());
 
     useEffect(() => {
         if (!eventId) return;
@@ -41,11 +42,7 @@ export default function ImageSelectionPage() {
     const toggleImageSelection = useCallback((imgName: string) => {
         setSelectedImages((prevSelected) => {
             const newSelected = new Set(prevSelected);
-            if (newSelected.has(imgName)) {
-                newSelected.delete(imgName);
-            } else {
-                newSelected.add(imgName);
-            }
+            newSelected.has(imgName) ? newSelected.delete(imgName) : newSelected.add(imgName);
             return newSelected;
         });
     }, []);
@@ -62,18 +59,18 @@ export default function ImageSelectionPage() {
         }
     };
 
-    const fetchSignedUrls = useCallback(async (selectedImages: Set<string>) => {
+    const fetchSignedUrls = useCallback(async (selected: Set<string>) => {
         setLoading(true);
-        const newSignedUrls = new Map<string, string>();
-        for (const imageName of selectedImages) {
+        const newUrls = new Map<string, string>();
+        for (const imageName of selected) {
             try {
                 const url = await FetchSignedImageUrl(imageName, 3600);
-                newSignedUrls.set(imageName, url);
+                newUrls.set(imageName, url);
             } catch (error) {
                 console.error("Error fetching signed URL:", error);
             }
         }
-        setSignedImageUrls(newSignedUrls);
+        setSignedImageUrls(newUrls);
         setLoading(false);
     }, []);
 
@@ -94,39 +91,41 @@ export default function ImageSelectionPage() {
             for (const imageName of Array.from(selectedImages)) {
                 await supabase.from("galleries").insert({ eventid: eventId, imagepath: imageName });
             }
+            router.push("/timeline");
         } catch (error) {
             console.error("Failed to add images", error);
         } finally {
             setLoading(false);
-            router.push("/timeline");
         }
     };
 
     return (
         <div className="flex flex-col items-center p-8 max-w-7xl mx-auto min-h-screen">
-            {/* Heading */}
-            <h2 className="text-3xl font-semibold text-center mb-6">Select Images for Event</h2>
+            <h2 className="text-3xl font-semibold text-primary text-center mb-6">
+                Select Images for Event
+            </h2>
 
             {loading ? (
-                <div className="flex items-center space-x-4 mb-6">
+                <div className="flex items-center space-x-4 mb-6 text-muted-foreground">
                     <span>Loading images...</span>
-                    <div className="w-4 h-4 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-4 border-t-transparent border-primary rounded-full animate-spin" />
                 </div>
             ) : (
                 <div className="flex flex-col md:flex-row w-full gap-8">
-                    {/* Left Column - Image List */}
+                    {/* Available images */}
                     <div className="w-full md:w-2/3 border border-border rounded-lg p-6 overflow-y-auto max-h-[70vh]">
                         {availableImages.map((imgName) => (
                             <div
                                 key={imgName}
-                                className={`flex items-center justify-between p-3 rounded-md cursor-pointer ${selectedImages.has(imgName) ? "border-2 border-primary bg-primary/10" : ""
-                                    }`}
                                 onClick={() => toggleImageSelection(imgName)}
+                                className={`flex items-center justify-between p-3 rounded-md cursor-pointer transition 
+                                    ${selectedImages.has(imgName) ? "border-2 border-primary bg-primary/10" : "hover:bg-muted"}`}
                             >
                                 <span className="text-sm truncate">{imgName}</span>
                                 <button
-                                    className={`p-2 ${selectedImages.has(imgName) ? "text-primary" : "text-accent"}`}
+                                    className={`p-2 rounded focus:outline-none ${selectedImages.has(imgName) ? "text-primary" : "text-accent"}`}
                                     aria-label="Select image"
+                                    type="button"
                                 >
                                     <ImageUpscale className="h-6 w-6" />
                                 </button>
@@ -134,7 +133,7 @@ export default function ImageSelectionPage() {
                         ))}
                     </div>
 
-                    {/* Right Column - Preview */}
+                    {/* Selected Preview */}
                     <div className="w-full md:w-1/3 border border-border rounded-lg p-6 flex flex-col items-center overflow-y-auto max-h-[70vh]">
                         {selectedImages.size > 0 && (
                             <div className="w-full space-y-4">
@@ -145,7 +144,7 @@ export default function ImageSelectionPage() {
                                             <img
                                                 src={url}
                                                 alt={`Preview of ${imgName}`}
-                                                className="max-h-48 object-contain rounded-md"
+                                                className="max-h-48 object-contain rounded-md shadow"
                                             />
                                             <div className="text-sm text-center truncate">{imgName}</div>
                                         </div>
@@ -162,32 +161,36 @@ export default function ImageSelectionPage() {
                 <button
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
-                    className="btn btn-secondary w-full sm:w-auto"
+                    type="button"
+                    className="bg-secondary text-secondary-foreground px-4 py-2 rounded font-medium disabled:opacity-50 hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
                 >
                     Previous
                 </button>
                 <button
                     onClick={handleNextPage}
                     disabled={currentPage >= Math.ceil(totalImages / imagesPerPage)}
-                    className="btn btn-secondary w-full sm:w-auto"
+                    type="button"
+                    className="bg-secondary text-secondary-foreground px-4 py-2 rounded font-medium disabled:opacity-50 hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
                 >
                     Next
                 </button>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action buttons */}
             <div className="flex justify-end space-x-3 mt-8 w-full border-t border-border pt-4">
                 <button
                     onClick={() => history.back()}
                     disabled={loading}
-                    className="btn btn-secondary w-full sm:w-auto"
+                    type="button"
+                    className="bg-muted text-foreground px-4 py-2 rounded font-medium hover:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent disabled:opacity-50"
                 >
                     Cancel
                 </button>
                 <button
                     onClick={handleConfirmSelection}
                     disabled={loading || selectedImages.size === 0}
-                    className="btn btn-primary w-full sm:w-auto"
+                    type="button"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded font-semibold hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent disabled:opacity-50"
                 >
                     Add Selected
                 </button>

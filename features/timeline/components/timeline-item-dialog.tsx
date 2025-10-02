@@ -27,7 +27,9 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    useEffect(() => setLocalEvent(event), [event]);
+    useEffect(() => {
+        setLocalEvent(event);
+    }, [event]);
 
     const handleNavigateToImageSelection = () => {
         router.push(`/timeline/image-selection?eventId=${localEvent.id}`);
@@ -112,8 +114,13 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
 
     return (
         <div
-            className="max-w-xl w-full p-6 rounded-2xl border-2 shadow-xl space-y-6"
-            style={{ borderStyle: "dashed", boxSizing: "border-box", backgroundColor: "hsl(var(--dialog))", color: "hsl(var(--dialog-foreground))" }}
+            className="max-w-xl w-full p-6 rounded-2xl border-2 shadow-xl space-y-6 border-dashed"
+            style={{
+                backgroundColor: "hsl(var(--dialog))",
+                color: "hsl(var(--dialog-foreground))",
+                borderColor: "hsl(var(--border))",
+                boxSizing: "border-box",
+            }}
         >
             {/* Date range section */}
             <div className="flex items-center justify-between text-xs font-semibold tracking-wider uppercase text-muted-foreground">

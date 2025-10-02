@@ -16,20 +16,11 @@
     --popover: 30 50% 92%;
     --popover-foreground: 220 37% 23%;
 
-    --primary: 220 37% 23%;
-    --primary-foreground: 30 50% 92%;
-
     --secondary: 213 19% 58%;
     --secondary-foreground: 30 50% 92%;
 
     --muted: 30 50% 85%;
-    --muted-foreground: 213 19% 58%;
 
-    /* Darker warm coffee tone */
-    --accent: 350 70% 35%;
-    /* Darker red-ish accent */
-    --accent-foreground: 350 80% 85%;
-    /* Light accent text */
 
     --highlight: 34 52% 71%;
     --highlight-foreground: 220 37% 23%;
@@ -39,10 +30,20 @@
     /* Slightly richer destructive */
     --destructive-foreground: 30 50% 92%;
 
-    --dialog: 30 50% 97%;
-    --dialog-foreground: 220 37% 23%;
+    --dialog: 0 0% 100%;
+    /* white background */
+    --dialog-foreground: 0 0% 0%;
+    /* black text */
+    --border-light: 220 15% 80%;
+    /* light gray border */
+    --accent: 340 65% 55%;
+    /* keep your accent color */
+    --accent-foreground: 340 65% 95%;
+    --primary: 220 50% 70%;
+    --primary-foreground: 220 50% 98%;
+    --muted-foreground: 220 20% 65%;
 
-    --border: 210 21% 80%;
+    /* muted text */
     --input: 210 21% 80%;
     --ring: 220 37% 23%;
 
@@ -63,28 +64,29 @@
     --foreground: 210 15% 85%;
     /* Light gray-blue, easier on eyes */
 
-    /* Muted text */
-    --muted-foreground: 210 15% 65%;
-
-    /* Accent colors remain richer */
-    --accent: 350 80% 37%;
-    /* Dark red accent */
-    --accent-foreground: 350 80% 85%;
-
     /* Card foreground soft white-gray */
     --card-foreground: 210 20% 85%;
 
     /* Popover foreground */
     --popover-foreground: 210 20% 85%;
 
-    /* Primary text softer tan */
-    --primary-foreground: 45 50% 85%;
-
     /* Destructive text softer red */
     --destructive-foreground: 30 50% 92%;
 
+    --dialog: 220 15% 18%;
+    /* darker blue/gray background */
+    --dialog-foreground: 200 20% 90%;
+    /* light gray text */
+    --border: 220 15% 35%;
+    /* darker border */
+    --accent: 340 65% 55%;
+    --accent-foreground: 340 65% 95%;
+    --primary: 220 50% 70%;
+    --primary-foreground: 220 50% 98%;
+    --muted: 220 20% 35%;
+    --muted-foreground: 220 20% 65%;
+
     /* Borders stronger */
-    --border: 210 20% 45%;
     --input: 210 20% 45%;
     --ring: 350 80% 55%;
   }
