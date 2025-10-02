@@ -48,10 +48,17 @@ export function LoginForm({
     };
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-            <Card>
+        <div
+            className={cn("flex flex-col gap-6", className)}
+            {...props}
+            style={{
+                backgroundColor: "hsl(var(--dialog))",
+                color: "hsl(var(--dialog-foreground))",
+            }}
+        >
+            <Card style={{ backgroundColor: "hsl(var(--dialog))", color: "hsl(var(--dialog-foreground))" }}>
                 <CardHeader>
-                    <CardTitle className="text-2xl">Login</CardTitle>
+                    <CardTitle className="text-2xl text-primary">Login</CardTitle>
                     <CardDescription>
                         Enter your email below to login to your account
                     </CardDescription>

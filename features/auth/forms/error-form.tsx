@@ -1,35 +1,27 @@
 import React from "react";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/shared/components";
 
 export function ErrorForm({ error }: { error?: string }) {
     return (
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">
-                                Sorry, something went wrong.
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {error ? (
-                                <p className="text-sm text-muted-foreground">
-                                    Code error: {error}
-                                </p>
-                            ) : (
-                                <p className="text-sm text-muted-foreground">
-                                    An unspecified error occurred.
-                                </p>
-                            )}
-                        </CardContent>
-                    </Card>
-                </div>
+        <div
+            className="flex min-h-screen w-full items-center justify-center p-6 md:p-10"
+            style={{
+                backgroundColor: "hsl(var(--background))",
+                color: "hsl(var(--foreground))",
+            }}
+        >
+            <div className="w-full max-w-sm rounded-2xl shadow-xl p-6"
+                style={{
+                    backgroundColor: "hsl(var(--dialog))",
+                    color: "hsl(var(--dialog-foreground))",
+                    boxSizing: "border-box",
+                }}
+            >
+                <h2 className="text-2xl text-primary mb-4">Sorry, something went wrong.</h2>
+                {error ? (
+                    <p className="text-sm text-muted-foreground">Code error: {error}</p>
+                ) : (
+                    <p className="text-sm text-muted-foreground">An unspecified error occurred.</p>
+                )}
             </div>
         </div>
     );

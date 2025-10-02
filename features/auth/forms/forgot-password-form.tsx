@@ -44,57 +44,71 @@ export function ForgotPasswordForm({
     };
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-            {success ? (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-primary">Check Your Email</CardTitle>
-                        <CardDescription>Password reset instructions sent</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground">
-                            If you registered using your email and password, you will receive a password reset email.
-                        </p>
-                    </CardContent>
-                </Card>
-            ) : (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-primary">Reset Your Password</CardTitle>
-                        <CardDescription>
-                            Type in your email and we'll send you a link to reset your password.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleForgotPassword} noValidate>
-                            <div className="flex flex-col gap-6">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        placeholder="email@example.com"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        aria-invalid={!!error}
-                                    />
+        <div
+            className={cn("flex flex-col gap-6", className)}
+            {...props}
+            style={{
+                backgroundColor: "hsl(var(--dialog))",
+                color: "hsl(var(--dialog-foreground))",
+            }}
+        >
+            <Card
+                style={{
+                    backgroundColor: "hsl(var(--dialog))",
+                    color: "hsl(var(--dialog-foreground))",
+                }}
+            >
+                {success ? (
+                    <>
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-primary">Check Your Email</CardTitle>
+                            <CardDescription>Password reset instructions sent</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                If you registered using your email and password, you will receive a password reset email.
+                            </p>
+                        </CardContent>
+                    </>
+                ) : (
+                    <>
+                        <CardHeader>
+                            <CardTitle className="text-2xl text-primary">Reset Your Password</CardTitle>
+                            <CardDescription>
+                                Type in your email and we'll send you a link to reset your password.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleForgotPassword} noValidate>
+                                <div className="flex flex-col gap-6">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="email">Email</Label>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            placeholder="email@example.com"
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            aria-invalid={!!error}
+                                        />
+                                    </div>
+                                    {error && <p className="text-sm text-destructive">{error}</p>}
+                                    <Button type="submit" className="w-full" disabled={isLoading} aria-busy={isLoading}>
+                                        {isLoading ? "Sending..." : "Send reset email"}
+                                    </Button>
                                 </div>
-                                {error && <p className="text-sm text-destructive">{error}</p>}
-                                <Button type="submit" className="w-full" disabled={isLoading} aria-busy={isLoading}>
-                                    {isLoading ? "Sending..." : "Send reset email"}
-                                </Button>
-                            </div>
-                            <div className="mt-4 text-center text-sm">
-                                Already have an account?{" "}
-                                <Link href="/auth/login" className="underline underline-offset-4 text-accent hover:text-accent/80">
-                                    Login
-                                </Link>
-                            </div>
-                        </form>
-                    </CardContent>
-                </Card>
-            )}
+                                <div className="mt-4 text-center text-sm">
+                                    Already have an account?{" "}
+                                    <Link href="/auth/login" className="underline underline-offset-4 text-accent hover:text-accent/80">
+                                        Login
+                                    </Link>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </>
+                )}
+            </Card>
         </div>
     );
 }
