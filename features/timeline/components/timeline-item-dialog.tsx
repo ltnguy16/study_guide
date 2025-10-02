@@ -6,15 +6,17 @@ import { UpsertTimelineField, UpsertTimelineDates } from "@/shared/service/upser
 import { FetchEventById } from "../service/fetch/fetch-event-by-id";
 import { DeleteFromGallery } from "../service/delete/delete-from-gallery";
 import { ScrollableImageGallery } from "./scrollable-image-gallery";
+import { CreateBrowserClient } from "@/lib/supabase/client";
 
 interface TimelineItemDialogProps {
     event: TimelineEvent;
     onEventUpdate: (updatedEvent: TimelineEvent) => void;
+    onEventDelete: (deletedId: number) => void;
 }
 
 type FieldKey = keyof Pick<TimelineEvent, "loiview" | "myview" | "sharedview" | "location" | "name">;
 
-export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, onEventUpdate }) => {
+export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, onEventUpdate, onEventDelete, }) => {
     const [localEvent, setLocalEvent] = useState(event);
     const [activeField, setActiveField] = useState<FieldKey | null>(null);
     const [editDates, setEditDates] = useState(false);
@@ -73,6 +75,33 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
         }
     };
 
+    const handleDelete = async () => {
+        const confirmed = confirm("Are you sure you want to delete this event?");
+        if (!confirmed) return;
+
+        setLoading(true);
+        const supabase = CreateBrowserClient();
+
+        try {
+            // Delete event from timeline_events table
+            const { error } = await supabase
+                .from("timeline_events")
+                .delete()
+                .eq("id", localEvent.id);
+            if (error) throw error;
+
+            // Optionally delete related gallery images too
+            await supabase.from("galleries").delete().eq("eventid", localEvent.id);
+
+            onEventDelete(localEvent.id);
+        } catch (error) {
+            console.error("Failed to delete event:", error);
+            alert("Failed to delete event. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fieldItems: { key: FieldKey; label: string; value: string }[] = [
         { key: "loiview", label: "Loi's View", value: localEvent.loiview },
         { key: "myview", label: "My's View", value: localEvent.myview },
@@ -95,7 +124,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                 <button
                     onClick={() => setEditDates(true)}
                     disabled={loading}
-                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto"
+                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
                     aria-label="Edit date range"
                 >
                     +
@@ -108,7 +137,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                 <button
                     onClick={() => setActiveField("name")}
                     disabled={loading}
-                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto"
+                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
                     aria-label="Edit title"
                 >
                     +
@@ -126,7 +155,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                         <button
                             onClick={() => setActiveField(key)}
                             disabled={loading}
-                            className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto"
+                            className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
                             aria-label={`Edit ${label}`}
                         >
                             +
@@ -163,6 +192,16 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                     loading={loading}
                 />
             )}
+
+            <div className="mt-4 flex justify-end">
+                <button
+                    disabled={loading}
+                    onClick={handleDelete}
+                    className="bg-red-600 text-white rounded px-3 py-1 text-sm hover:bg-red-700"
+                >
+                    Delete Event
+                </button>
+            </div>
         </div>
     );
 };

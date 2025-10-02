@@ -10,6 +10,8 @@ interface TimelineItemDotProps {
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
+    onEventUpdate: (event: TimelineEvent) => void;
+    onEventDelete: (id: number) => void;
 }
 
 export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
@@ -18,11 +20,14 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
     isOpen,
     onOpen,
     onClose,
+    onEventUpdate,
+    onEventDelete,
 }) => {
-    const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+    const [position, setPosition] = useState<{ top: number; left: number } | null>(
+        null
+    );
     const dotRef = useRef<HTMLDivElement>(null);
 
-    // Compute and set dialog position based on dot position
     const updatePosition = () => {
         if (dotRef.current) {
             const rect = dotRef.current.getBoundingClientRect();
@@ -33,12 +38,10 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
         }
     };
 
-    // Run on open to set initial position
     useEffect(() => {
         if (isOpen) {
             updatePosition();
 
-            // Update position on scroll and resize to follow dot
             window.addEventListener("scroll", updatePosition);
             window.addEventListener("resize", updatePosition);
 
@@ -51,7 +54,6 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
         }
     }, [isOpen]);
 
-    // Close dialog on outside click
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (
@@ -80,14 +82,12 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
         <div
             style={{
                 position: "absolute",
-                top: `${top}px`, // This is dotTop from parent
+                top: `${top}px`,
                 left: "0px",
                 zIndex: 60,
-                transform: "translateY(-50%)", // <-- vertically center
+                transform: "translateY(-50%)",
             }}
-
         >
-            {/* Dot */}
             <div
                 ref={dotRef}
                 style={{
@@ -107,7 +107,6 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                 <Circle color="white" size={16} />
             </div>
 
-            {/* Dialog */}
             {isOpen && position && (
                 <TimelineDialogPortal>
                     <div
@@ -122,13 +121,17 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                             borderRadius: "8px",
                             padding: "24px 24px 24px 10px",
                             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-                            maxWidth: "calc(100vw - " + (position.left + 24) + "px)",
+                            maxWidth: `calc(100vw - ${position.left + 24}px)`,
                             minWidth: "250px",
                             overflowX: "auto",
                             maxHeight: "90vh",
                         }}
                     >
-                        <TimelineItemDialog event={event} onEventUpdate={() => { }} />
+                        <TimelineItemDialog
+                            event={event}
+                            onEventUpdate={onEventUpdate}
+                            onEventDelete={onEventDelete}
+                        />
                     </div>
                 </TimelineDialogPortal>
             )}

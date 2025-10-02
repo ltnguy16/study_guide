@@ -10,11 +10,12 @@ interface TimelineItemProps {
     hideDots: boolean;
     onOpen: (id: number) => void;
     onClose: () => void;
+    onEventUpdate: (event: TimelineEvent) => void;
+    onEventDelete: (id: number) => void;
 }
-
-const TIMELINE_HEIGHT = 900;
+const TIMELINE_HEIGHT = 1200;
 const TIMELINE_START = new Date("2020-01-01");
-const TIMELINE_END = new Date("2025-12-31");
+const TIMELINE_END = new Date("2026-12-31");
 
 // Helper function to get position based on date
 function getPosition(dateStr: string) {
@@ -41,6 +42,8 @@ const years = [
     { year: 2023, date: "2023-01-01" },
     { year: 2024, date: "2024-01-01" },
     { year: 2025, date: "2025-01-01" },
+    { year: 2026, date: "2026-01-01" },
+    { year: 2027, date: "2027-01-01" },
 ];
 
 // Quarter start dates
@@ -69,6 +72,10 @@ const quarterDates = [
     { label: "Q2", date: "2025-04-01" },
     { label: "Q3", date: "2025-07-01" },
     { label: "Q4", date: "2025-10-01" },
+    { label: "Q1", date: "2026-01-01" },
+    { label: "Q2", date: "2026-04-01" },
+    { label: "Q3", date: "2026-07-01" },
+    { label: "Q4", date: "2026-10-01" },
 ];
 
 
@@ -78,6 +85,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
     hideDots,
     onOpen,
     onClose,
+    onEventUpdate,
+    onEventDelete,
 }) => {
     return (
         <div
@@ -153,6 +162,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
             })}
 
             {/* Events with dots and bars */}
+
             {events.map((event) => {
                 const startTop = getPosition(event.eventstart!);
                 const endTop = getPosition(event.eventend!);
@@ -163,8 +173,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                         {/* Bar */}
                         <div
                             style={{
-                                position: "absolute", // must be absolute
-                                left: "7px", // (18 / 2) - (4 / 2) = 9 - 2 = 7px to center under dot
+                                position: "absolute",
+                                left: "7px",
                                 top: `${startTop}px`,
                                 height: `${barHeight}px`,
                                 width: "4px",
@@ -172,8 +182,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 borderRadius: "2px",
                             }}
                         />
-
-                        {/* Dot with controlled open state */}
+                        {/* Dot */}
                         {!hideDots && (
                             <TimelineItemDot
                                 event={event}
@@ -181,9 +190,10 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 isOpen={openDotId === event.id}
                                 onOpen={() => onOpen(event.id)}
                                 onClose={onClose}
+                                onEventUpdate={onEventUpdate}
+                                onEventDelete={onEventDelete}
                             />
                         )}
-
                     </React.Fragment>
                 );
             })}
