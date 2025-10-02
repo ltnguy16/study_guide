@@ -64,9 +64,9 @@ export default function SideNav() {
         <>
             {/* Mobile hamburger toggle button */}
             <button
-                onClick={() => setMobileOpen(true)}
+                onClick={() => setMobileOpen((prev) => !prev)}
                 aria-label="Open menu"
-                className="fixed top-4 left-4 z-50 md:hidden text-gray-700 dark:text-gray-300 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                className="fixed top-4 right-4 z-50 md:hidden text-gray-700 dark:text-gray-300 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition shadow-lg border-2 border-muted"
             >
                 <Menu size={24} />
             </button>

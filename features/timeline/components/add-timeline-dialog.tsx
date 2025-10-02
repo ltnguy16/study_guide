@@ -172,8 +172,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     placeholder="Location"
                     value={formData.location}
                     onChange={handleChange}
-                    required
-                    valid={isFieldValid("location")}
                 />
 
                 <div className="flex justify-end space-x-3 mt-6">
