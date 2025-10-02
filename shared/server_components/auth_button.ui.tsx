@@ -14,9 +14,6 @@ export function AuthButtonUI({ user }: { user: { email?: string } | null }) {
             <Button asChild size="sm" variant={"header_light"}>
                 <Link href="/auth/login">Sign in</Link>
             </Button>
-            <Button asChild size="sm" variant={"header_dark"}>
-                <Link href="/auth/sign-up">Sign up</Link>
-            </Button>
         </div>
     );
 }

@@ -142,7 +142,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     label="Loi's View"
                     id="loiview"
                     name="loiview"
-                    placeholder="LoFi's description"
+                    placeholder="Loi's description"
                     value={formData.loiview}
                     onChange={handleChange}
                 />
