@@ -13,21 +13,23 @@ export function TimelineItemClient() {
     const [openDotId, setOpenDotId] = useState<number | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
 
+    // Sync local events state with timeline data from hook
     useEffect(() => {
         setEvents(initialEvents);
     }, [initialEvents]);
 
+    // Update one event in local state when changed
     const handleEventUpdate = (updatedEvent: TimelineEvent) => {
-        setEvents((prev) =>
-            prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e))
-        );
+        setEvents((prev) => prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e)));
     };
 
+    // Delete event locally and close its dot if open
     const handleEventDelete = (deletedId: number) => {
         setEvents((prev) => prev.filter((e) => e.id !== deletedId));
         if (openDotId === deletedId) setOpenDotId(null);
     };
 
+    // Determine if any dialog is open to hide dots when adding a new event
     const isAnyDialogOpen = openDotId !== null || addDialogOpen;
 
     return (

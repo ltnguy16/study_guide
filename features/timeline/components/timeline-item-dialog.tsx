@@ -16,7 +16,11 @@ interface TimelineItemDialogProps {
 
 type FieldKey = keyof Pick<TimelineEvent, "loiview" | "myview" | "sharedview" | "location" | "name">;
 
-export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, onEventUpdate, onEventDelete, }) => {
+export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
+    event,
+    onEventUpdate,
+    onEventDelete,
+}) => {
     const [localEvent, setLocalEvent] = useState(event);
     const [activeField, setActiveField] = useState<FieldKey | null>(null);
     const [editDates, setEditDates] = useState(false);
@@ -83,16 +87,13 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
         const supabase = CreateBrowserClient();
 
         try {
-            // Delete event from timeline_events table
             const { error } = await supabase
                 .from("timeline_events")
                 .delete()
                 .eq("id", localEvent.id);
             if (error) throw error;
 
-            // Optionally delete related gallery images too
             await supabase.from("galleries").delete().eq("eventid", localEvent.id);
-
             onEventDelete(localEvent.id);
         } catch (error) {
             console.error("Failed to delete event:", error);
@@ -111,11 +112,11 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
 
     return (
         <div
-            className="max-w-xl w-full p-6 rounded-2xl border-2 border-accent shadow-xl space-y-4"
-            style={{ borderStyle: "dashed", boxSizing: "border-box" }}
+            className="max-w-xl w-full p-6 rounded-2xl border-2 shadow-xl space-y-6"
+            style={{ borderStyle: "dashed", boxSizing: "border-box", backgroundColor: "hsl(var(--dialog))", color: "hsl(var(--dialog-foreground))" }}
         >
-            {/* Date range */}
-            <div className="flex items-start justify-between text-xs text-muted-foreground font-semibold tracking-wider uppercase">
+            {/* Date range section */}
+            <div className="flex items-center justify-between text-xs font-semibold tracking-wider uppercase text-muted-foreground">
                 <span>
                     {localEvent.eventstart && localEvent.eventend
                         ? `${formatDate(localEvent.eventstart)} - ${formatDate(localEvent.eventend)}`
@@ -124,30 +125,32 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                 <button
                     onClick={() => setEditDates(true)}
                     disabled={loading}
-                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
+                    className="text-accent hover:underline px-2 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent text-xs"
                     aria-label="Edit date range"
+                    type="button"
                 >
                     +
                 </button>
             </div>
 
-            {/* Title */}
-            <div className="flex items-start justify-between text-xl font-semibold text-primary">
+            {/* Title section */}
+            <div className="flex items-center justify-between text-xl font-semibold text-primary">
                 <span>{localEvent.name}</span>
                 <button
                     onClick={() => setActiveField("name")}
                     disabled={loading}
-                    className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
+                    className="text-accent hover:underline px-2 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent text-xs"
                     aria-label="Edit title"
+                    type="button"
                 >
                     +
                 </button>
             </div>
 
             {/* Description fields */}
-            <div className="text-sm leading-relaxed space-y-2 py-2">
+            <div className="space-y-3 text-sm leading-relaxed">
                 {fieldItems.map(({ key, label, value }) => (
-                    <div key={key} className="flex items-start justify-between">
+                    <div key={key} className="flex items-center justify-between">
                         <div>
                             <span className="font-semibold text-muted-foreground">{label}: </span>
                             <span>{value}</span>
@@ -155,8 +158,9 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                         <button
                             onClick={() => setActiveField(key)}
                             disabled={loading}
-                            className="text-accent hover:underline text-xs ml-2 max-w-[30px] px-1 w-auto px-2"
+                            className="text-accent hover:underline px-2 py-0.5 rounded focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent text-xs"
                             aria-label={`Edit ${label}`}
+                            type="button"
                         >
                             +
                         </button>
@@ -193,11 +197,13 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({ event, o
                 />
             )}
 
-            <div className="mt-4 flex justify-end">
+            {/* Delete button */}
+            <div className="flex justify-end">
                 <button
-                    disabled={loading}
                     onClick={handleDelete}
-                    className="bg-red-600 text-white rounded px-3 py-1 text-sm hover:bg-red-700"
+                    disabled={loading}
+                    className="bg-red-600 text-white rounded px-4 py-2 text-sm font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-destructive"
+                    type="button"
                 >
                     Delete Event
                 </button>

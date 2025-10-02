@@ -4,7 +4,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/shared";
-import { Menu, LayoutDashboard, ListCollapse, CalendarClockIcon, X } from "lucide-react";
+import { Menu, ListCollapse, CalendarClockIcon, X } from "lucide-react";
 
 interface NavItem {
     label: string;
@@ -19,13 +19,9 @@ export default function SideNav() {
 
     const [collapsed, setCollapsed] = useState(true);
     const [isMidCollapse, setIsMidCollapse] = useState(false);
-
-    // New state to control mobile sidebar visibility
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    const navLinks: NavItem[] = [
-        { label: "Timeline", href: "/timeline", icon: CalendarClockIcon },
-    ];
+    const navLinks: NavItem[] = [{ label: "Timeline", href: "/timeline", icon: CalendarClockIcon }];
 
     const toggleCollapsed = useCallback(() => {
         if (!collapsed) {
@@ -54,7 +50,6 @@ export default function SideNav() {
         [router]
     );
 
-    // Close sidebar on Escape key press (for accessibility)
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape" && mobileOpen) {
@@ -67,7 +62,7 @@ export default function SideNav() {
 
     return (
         <>
-            {/* Mobile hamburger toggle button (visible on small screens only) */}
+            {/* Mobile hamburger toggle button */}
             <button
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
@@ -76,7 +71,7 @@ export default function SideNav() {
                 <Menu size={24} />
             </button>
 
-            {/* Overlay for mobile when sidebar is open */}
+            {/* Mobile overlay */}
             {mobileOpen && (
                 <div
                     onClick={() => setMobileOpen(false)}
@@ -89,22 +84,19 @@ export default function SideNav() {
                 role="navigation"
                 aria-label="Main"
                 className={cn(
-                    "fixed top-0 left-0 h-full transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
-                    // Solid background colors - no transparency
+                    "fixed top-0 left-0 h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
                     "bg-white dark:bg-gray-900",
                     collapsed ? "w-16 md:w-16" : "w-full md:w-64",
                     "md:relative md:h-auto md:top-auto md:left-auto",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",
                     "transform md:transform-none",
-                    "max-w-xs md:max-w-none" // Limit max width on mobile
+                    "max-w-xs md:max-w-none"
                 )}
                 style={{
                     minWidth: collapsed ? 64 : undefined,
                     width: collapsed ? "4rem" : undefined,
-                    height: "100vh",
                 }}
             >
-
                 {/* Header */}
                 <div
                     className={cn(
@@ -116,14 +108,15 @@ export default function SideNav() {
                         <div
                             className={cn(
                                 "text-lg font-semibold select-none transition-opacity duration-300",
-                                isMidCollapse ? "opacity-50 pointer-events-none" : "opacity-100"
+                                isMidCollapse ? "opacity-50 pointer-events-none" : "opacity-100",
+                                "text-gray-900 dark:text-gray-100"
                             )}
                         >
                             Menu
                         </div>
                     )}
 
-                    {/* Toggle sidebar button */}
+                    {/* Sidebar toggle */}
                     <button
                         onClick={toggleCollapsed}
                         className="text-gray-600 dark:text-gray-300 focus:outline-none hover:text-pyramid-primary transition-colors hover:bg-muted/50 rounded p-1"
@@ -151,13 +144,12 @@ export default function SideNav() {
                 {/* Navigation Links */}
                 <nav
                     className={cn(
-                        "flex flex-col gap-2 px-2 mt-2",
+                        "flex flex-col gap-2 px-2 mt-2 overflow-y-auto flex-1",
                         collapsed ? "items-center" : ""
                     )}
                 >
                     {navLinks.map(({ label, href, external, icon: Icon }) => {
                         const isActive = href && pathname === href;
-
                         return (
                             <Link
                                 key={href}
@@ -167,8 +159,8 @@ export default function SideNav() {
                                 className={cn(
                                     "flex items-center w-full px-3 py-2 rounded text-sm font-medium transition-colors",
                                     isActive
-                                        ? "text-pyramid-primary bg-muted"
-                                        : "text-gray-700 dark:text-gray-300 hover:text-pyramid-primary hover:bg-muted/50",
+                                        ? "text-pyramid-primary bg-muted dark:bg-gray-700"
+                                        : "text-gray-700 dark:text-gray-300 hover:text-pyramid-primary hover:bg-muted/50 dark:hover:bg-gray-700",
                                     collapsed ? "justify-center" : "justify-start"
                                 )}
                                 title={collapsed ? label : undefined}

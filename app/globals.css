@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Light Theme Colors */
     --background: 30 50% 92%;
     /* Soft Cream */
     --foreground: 220 37% 23%;
@@ -16,30 +17,29 @@
     --popover-foreground: 220 37% 23%;
 
     --primary: 220 37% 23%;
-    /* Space Cadet */
     --primary-foreground: 30 50% 92%;
 
     --secondary: 213 19% 58%;
-    /* Improved Slate Gray */
     --secondary-foreground: 30 50% 92%;
 
-    --muted: 30 50% 92%;
+    --muted: 30 50% 85%;
     --muted-foreground: 213 19% 58%;
 
-    --accent: 22 32% 33%;
-    /* Coffee */
-    --accent-foreground: 30 50% 92%;
+    /* Darker warm coffee tone */
+    --accent: 350 70% 35%;
+    /* Darker red-ish accent */
+    --accent-foreground: 350 80% 85%;
+    /* Light accent text */
 
     --highlight: 34 52% 71%;
-    /* Tan */
     --highlight-foreground: 220 37% 23%;
 
-    --destructive: 4 50% 30%;
     /* Caput Mortuum */
+    --destructive: 4 60% 40%;
+    /* Slightly richer destructive */
     --destructive-foreground: 30 50% 92%;
 
     --dialog: 30 50% 97%;
-    /* Lighter cream than background */
     --dialog-foreground: 220 37% 23%;
 
     --border: 210 21% 80%;
@@ -56,47 +56,37 @@
   }
 
   .dark {
-    --background: 220 37% 10%;
-    /* Dark Space Cadet */
-    --foreground: 30 50% 92%;
-    /* Soft Cream */
+    --background: 220 37% 12%;
+    /* Dark background */
 
-    --card: 220 37% 12%;
-    --card-foreground: 30 50% 92%;
+    /* Softer but bright text for readability */
+    --foreground: 210 15% 85%;
+    /* Light gray-blue, easier on eyes */
 
-    --popover: 220 37% 12%;
-    --popover-foreground: 30 50% 92%;
+    /* Muted text */
+    --muted-foreground: 210 15% 65%;
 
-    --primary: 34 52% 71%;
-    /* Tan */
-    --primary-foreground: 220 37% 10%;
+    /* Accent colors remain richer */
+    --accent: 350 80% 37%;
+    /* Dark red accent */
+    --accent-foreground: 350 80% 85%;
 
-    --secondary: 213 19% 58%;
-    /* Slate Gray */
-    --secondary-foreground: 30 50% 92%;
+    /* Card foreground soft white-gray */
+    --card-foreground: 210 20% 85%;
 
-    --muted: 220 37% 14%;
-    --muted-foreground: 30 50% 92%;
+    /* Popover foreground */
+    --popover-foreground: 210 20% 85%;
 
-    --accent: 22 32% 33%;
-    --accent-foreground: 30 50% 92%;
+    /* Primary text softer tan */
+    --primary-foreground: 45 50% 85%;
 
-    --destructive: 4 50% 30%;
+    /* Destructive text softer red */
     --destructive-foreground: 30 50% 92%;
 
-    --dialog: 220 37% 15%;
-    /* Slightly lighter than dark card */
-    --dialog-foreground: 30 50% 92%;
-
-    --border: 210 21% 25%;
-    --input: 210 21% 25%;
-    --ring: 34 52% 71%;
-
-    --chart-1: 220 37% 60%;
-    --chart-2: 213 19% 58%;
-    --chart-3: 34 52% 71%;
-    --chart-4: 22 32% 50%;
-    --chart-5: 4 50% 30%;
+    /* Borders stronger */
+    --border: 210 20% 45%;
+    --input: 210 20% 45%;
+    --ring: 350 80% 55%;
   }
 
   * {
@@ -157,4 +147,10 @@
   .scrollable-container {
     @apply max-h-[70vh] overflow-y-auto;
   }
+}
+
+html,
+body,
+#__next {
+  height: 100%;
 }

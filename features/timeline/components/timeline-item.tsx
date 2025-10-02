@@ -13,11 +13,12 @@ interface TimelineItemProps {
     onEventUpdate: (event: TimelineEvent) => void;
     onEventDelete: (id: number) => void;
 }
+
 const TIMELINE_HEIGHT = 1200;
 const TIMELINE_START = new Date("2020-01-01");
 const TIMELINE_END = new Date("2026-12-31");
 
-// Helper function to get position based on date
+// Calculate vertical position for a given date string within timeline range
 function getPosition(dateStr: string) {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
@@ -27,14 +28,10 @@ function getPosition(dateStr: string) {
     const totalDuration = TIMELINE_END.getTime() - TIMELINE_START.getTime();
     const offset = date.getTime() - TIMELINE_START.getTime();
     const pos = (offset / totalDuration) * TIMELINE_HEIGHT;
-
-    console.log(`Date: ${dateStr}, Offset: ${offset}, Position: ${pos}`);
-
     return pos;
 }
 
-
-// Define the year start dates
+// Year markers
 const years = [
     { year: 2020, date: "2020-01-01" },
     { year: 2021, date: "2021-01-01" },
@@ -46,7 +43,7 @@ const years = [
     { year: 2027, date: "2027-01-01" },
 ];
 
-// Quarter start dates
+// Quarter markers
 const quarterDates = [
     { label: "Q1", date: "2020-01-01" },
     { label: "Q2", date: "2020-04-01" },
@@ -78,7 +75,6 @@ const quarterDates = [
     { label: "Q4", date: "2026-10-01" },
 ];
 
-
 export const TimelineItem: React.FC<TimelineItemProps> = ({
     events,
     openDotId,
@@ -99,7 +95,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                 userSelect: "none",
             }}
         >
-            {/* Year labels aligned precisely */}
+            {/* Year labels */}
             {years.map(({ year, date }) => {
                 const top = getPosition(date);
                 return (
@@ -121,13 +117,11 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                 );
             })}
 
-
-            {/* Quarter labels and dashes aligned to specific dates */}
-            {quarterDates.map((q) => {
-                const top = getPosition(q.date);
+            {/* Quarter labels and dashes */}
+            {quarterDates.map(({ label, date }) => {
+                const top = getPosition(date);
                 return (
-                    <React.Fragment key={q.label + q.date}>
-                        {/* Dash line extending from the main line */}
+                    <React.Fragment key={label + date}>
                         <div
                             style={{
                                 position: "absolute",
@@ -140,7 +134,6 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 transform: "translateY(-50%)",
                             }}
                         />
-                        {/* Quarter label below the dash */}
                         <div
                             style={{
                                 position: "absolute",
@@ -155,19 +148,19 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 userSelect: "none",
                             }}
                         >
-                            {q.label}
+                            {label}
                         </div>
                     </React.Fragment>
                 );
             })}
 
-            {/* Events with dots and bars */}
-
+            {/* Events bars and dots */}
             {events.map((event) => {
                 const startTop = getPosition(event.eventstart!);
                 const endTop = getPosition(event.eventend!);
                 const barHeight = Math.max(endTop - startTop, 4);
                 const dotTop = startTop + barHeight / 2;
+
                 return (
                     <React.Fragment key={event.id}>
                         {/* Bar */}

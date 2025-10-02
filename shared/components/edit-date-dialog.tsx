@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface EditDateRangeDialogProps {
     initialStartDate: string;
@@ -15,50 +15,73 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
     initialEndDate,
     onSubmit,
     onCancel,
-    loading,
+    loading = false,
 }) => {
     const [startDate, setStartDate] = useState(initialStartDate);
     const [endDate, setEndDate] = useState(initialEndDate);
 
+    // Reset dates if props change (optional)
+    useEffect(() => {
+        setStartDate(initialStartDate);
+        setEndDate(initialEndDate);
+    }, [initialStartDate, initialEndDate]);
+
+    const handleSubmit = () => {
+        onSubmit(startDate, endDate);
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-            <div className="bg-dialog text-dialog-foreground p-6 rounded-xl w-full max-w-sm shadow-lg space-y-4 border border-border">
-                <h2 className="text-lg font-semibold">Edit Date Range</h2>
+            <div
+                className="bg-dialog text-dialog-foreground p-6 rounded-xl w-full max-w-sm shadow-lg space-y-6 border border-border"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="edit-date-range-dialog-title"
+            >
+                <h2
+                    id="edit-date-range-dialog-title"
+                    className="text-lg font-semibold"
+                >
+                    Edit Date Range
+                </h2>
 
-                <div className="space-y-2">
-                    <label className="block text-sm">
-                        Start Date
+                <div className="space-y-4">
+                    <label className="block">
+                        <span className="text-sm font-medium">Start Date</span>
                         <input
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            className="w-full p-2 mt-1 rounded-md border border-border bg-background text-foreground"
+                            className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                            aria-label="Start date"
                         />
                     </label>
-
-                    <label className="block text-sm">
-                        End Date
+                    <label className="block">
+                        <span className="text-sm font-medium">End Date</span>
                         <input
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            className="w-full p-2 mt-1 rounded-md border border-border bg-background text-foreground"
+                            className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                            aria-label="End date"
                         />
                     </label>
                 </div>
 
-                <div className="flex justify-end space-x-2 pt-2">
+                <div className="flex justify-end space-x-3 pt-2">
                     <button
                         onClick={onCancel}
                         disabled={loading}
-                        className="px-3 py-1 rounded-md bg-muted text-muted-foreground hover:opacity-80"
+                        className="rounded-md bg-muted text-muted-foreground px-4 py-2 hover:opacity-80 transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-muted"
+                        type="button"
                     >
                         Cancel
                     </button>
                     <button
-                        onClick={() => onSubmit(startDate, endDate)}
+                        onClick={handleSubmit}
                         disabled={loading}
-                        className="px-3 py-1 rounded-md bg-primary text-primary-foreground hover:opacity-90"
+                        className="rounded-md bg-primary text-primary-foreground px-4 py-2 hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
+                        type="button"
                     >
                         Submit
                     </button>

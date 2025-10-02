@@ -7,7 +7,7 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./shared/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-
+    "./features/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
     "toast-viewport",
@@ -16,6 +16,8 @@ export default {
     "text-accent-foreground",
     "bg-dialog",
     "text-dialog-foreground",
+    "text-foreground",
+    "text-destructive",
   ],
 
   theme: {

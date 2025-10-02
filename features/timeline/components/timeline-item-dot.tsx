@@ -23,9 +23,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
     onEventUpdate,
     onEventDelete,
 }) => {
-    const [position, setPosition] = useState<{ top: number; left: number } | null>(
-        null
-    );
+    const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
     const dotRef = useRef<HTMLDivElement>(null);
 
     const updatePosition = () => {
@@ -96,15 +94,22 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                     alignItems: "center",
                     width: "18px",
                     height: "18px",
-                    backgroundColor: "hsl(var(--primary))",
+                    backgroundColor: "hsl(var(--accent))", // using dark red accent variable
                     borderRadius: "50%",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                    boxShadow: "0 0 8px hsl(var(--accent))", // subtle glow
                     cursor: "pointer",
                     transition: "background-color 0.2s ease",
                 }}
                 onClick={toggle}
+                aria-label="Toggle timeline event details"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggle();
+                }}
             >
-                <Circle color="white" size={16} />
+                {/* Circle icon with foreground accent color */}
+                <Circle color="hsl(var(--accent-foreground))" size={16} />
             </div>
 
             {isOpen && position && (
@@ -117,7 +122,8 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                             left: position.left,
                             transform: "translate(0, -50%)",
                             zIndex: 100,
-                            backgroundColor: "white",
+                            backgroundColor: "hsl(var(--dialog))",
+                            color: "hsl(var(--dialog-foreground))",
                             borderRadius: "8px",
                             padding: "24px 24px 24px 10px",
                             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
