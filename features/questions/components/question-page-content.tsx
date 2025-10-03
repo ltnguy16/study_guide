@@ -1,7 +1,7 @@
 "use client";
 
 import { InfoTooltip } from "@/shared";
-import { MessageSquareWarning, Edit } from "lucide-react";
+import { MessageSquareWarning, Edit, X, CircleX } from "lucide-react";
 import React, { useState } from "react";
 import { useFetchQuestions } from "../services/fetch/fetch-questions";
 
@@ -90,7 +90,7 @@ export default function QuestionsPageContent() {
       {/* Fixed floating container at lower right */}
       <div
         style={{ bottom: 16, right: 16 }}
-        className={`fixed z-50 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-xl px-4 py-3 flex flex-col items-center space-y-3 text-sm font-normal select-none w-max transition-all overflow-hidden ${
+        className={`fixed z-50 bg-white/30 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-xl px-2 py-1 flex flex-col items-center space-y-3 text-sm font-normal select-none w-max transition-all overflow-hidden ${
           isCollapsed ? "w-12 h-12" : "w-auto h-auto"
         }`}
       >
@@ -105,70 +105,65 @@ export default function QuestionsPageContent() {
             +
           </button>
         ) : (
-          <>
-            <div className="flex items-center justify-between w-full space-x-6 pr-8">
+          <div className="flex flex-col gap-2 p-2 rounded-xl bg-background bg-white/0 shadow-sm w-full">
+            {/* Segmented mode toggle */}
+            <div className="flex rounded-md overflow-hidden border border-border">
               <button
                 onClick={() => setMode("showAll")}
-                className={`px-3 py-1 rounded-md whitespace-nowrap ${
+                className={`px-3 py-1 text-sm transition ${
                   mode === "showAll"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted dark:bg-muted/70"
-                } transition`}
+                    : "bg-muted hover:bg-muted/70"
+                }`}
                 aria-pressed={mode === "showAll"}
-                type="button"
               >
                 Show All
               </button>
               <button
                 onClick={() => setMode("single")}
-                className={`px-3 py-1 rounded-md whitespace-nowrap ${
+                className={`px-3 py-1 text-sm transition ${
                   mode === "single"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted dark:bg-muted/70"
-                } transition`}
+                    : "bg-muted hover:bg-muted/70"
+                }`}
                 aria-pressed={mode === "single"}
-                type="button"
               >
                 Flashcard
               </button>
               <button
                 onClick={() => setMode("multi")}
-                className={`px-3 py-1 rounded-md whitespace-nowrap ${
+                className={`px-3 py-1 text-sm transition ${
                   mode === "multi"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted dark:bg-muted/70"
-                } transition`}
+                    : "bg-muted hover:bg-muted/70"
+                }`}
                 aria-pressed={mode === "multi"}
-                type="button"
               >
                 Toggle
               </button>
             </div>
-            <button
-              onClick={() => alert("Add New Flash clicked")}
-              className="w-full px-4 py-2 text-sm bg-pyramid-primary hover:bg-pyramid-primary-dark text-pyramid-primary-foreground rounded-md text-center transition"
-              type="button"
-            >
-              Add New Flash
-            </button>
-            {/* Collapse button in reserved space with styling */}
-            <button
-              aria-label="Collapse mode selector"
-              onClick={() => setIsCollapsed(true)}
-              className="absolute top-3 right-3 text-muted-foreground hover:text-muted-foreground/80 rounded p-1 focus:outline-none transition"
-              type="button"
-            >
-              ✕
-            </button>
-          </>
+
+            {/* Second row: add button left, collapse right */}
+            <div className="flex items-center justify-between gap-2">
+              <button
+                onClick={() => alert("Add New Flash clicked")}
+                className="flex-1 px-3 py-1 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition text-center"
+              >
+                + Add Questions
+              </button>
+
+              <button
+                aria-label="Collapse mode selector"
+                onClick={() => setIsCollapsed(true)}
+                className="p-1 rounded hover:bg-muted transition text-muted-foreground"
+              >
+                <CircleX size={18} />
+              </button>
+            </div>
+          </div>
+
         )}
       </div>
-
-      {/* Page heading */}
-      <h1 className="text-xl font-semibold mb-4 text-primary dark:text-primary-foreground">
-        Study Questions
-      </h1>
-
       {/* Question list */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {questions.map(({ id, question, loi, my, important, category }) => {
@@ -176,15 +171,7 @@ export default function QuestionsPageContent() {
           return (
             <li
               key={id}
-              className={`bg-muted dark:bg-muted/80 border border-border dark:border-border/70 rounded-md p-3 cursor-pointer select-none shadow-sm transition-shadow hover:shadow-md flex flex-col justify-start ${
-                important === "Loi"
-                  ? "border-red-500"
-                  : important === "My"
-                  ? "border-blue-500"
-                  : important === "Both"
-                  ? "border-green-500"
-                  : ""
-              }`}
+              className={`bg-muted dark:bg-muted/80 border border-border dark:border-border/70 rounded-md p-3 cursor-pointer select-none shadow-sm transition-shadow hover:shadow-md flex flex-col justify-start`}
               onClick={() => handleExpandToggle(id)}
               tabIndex={0}
               onKeyDown={(e) => {

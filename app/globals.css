@@ -39,8 +39,8 @@
     --accent: 340 65% 55%;
     /* keep your accent color */
     --accent-foreground: 340 65% 95%;
-    --primary: 220 50% 70%;
-    --primary-foreground: 220 50% 98%;
+    --primary: 20 70% 60%; /* Warm coral/orange hue */
+    --primary-foreground: 30 90% 98%; /* Very light cream text */
     --muted-foreground: 220 20% 65%;
 
     /* muted text */
@@ -89,6 +89,7 @@
     /* Borders stronger */
     --input: 210 20% 45%;
     --ring: 350 80% 55%;
+    
   }
 
   * {

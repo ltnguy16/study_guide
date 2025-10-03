@@ -9,8 +9,15 @@ export default async function TimelinePage() {
   if (authError || !authData?.user) redirect("/auth/login");
 
   return (
-    <div className="flex flex-col gap-6 p-6 w-full">
-      <TimelineItemClient />
-    </div>
+    <>
+      <header className="px-6 py-4 border-b border-border dark:border-border/50 shadow-sm sticky top-0 bg-background dark:bg-background z-10">
+          <h1 className="text-2xl font-semibold text-primary dark:text-primary-foreground">
+            Event Timeline
+          </h1>
+        </header>
+      <div className="flex flex-col gap-6 p-6 w-full">
+        <TimelineItemClient />
+      </div>
+    </>
   );
 }

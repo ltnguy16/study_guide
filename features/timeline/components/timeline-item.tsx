@@ -90,7 +90,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                 position: "relative",
                 height: `${TIMELINE_HEIGHT}px`,
                 width: "256px",
-                borderLeft: "4px solid hsl(var(--primary))",
+                borderLeft: "4px solid #7F2A3C",   // Velvet red main timeline line
                 marginLeft: "40px",
                 userSelect: "none",
             }}
@@ -106,7 +106,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                             left: "-80px",
                             top: `${top}px`,
                             transform: "translateY(-50%)",
-                            color: "#4b5563",
+                            color: "#6B5876",             // Warm muted purple-gray for years
                             fontWeight: 600,
                             fontSize: "14px",
                             userSelect: "none",
@@ -129,7 +129,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 top: `${top}px`,
                                 width: "12px",
                                 height: "2px",
-                                backgroundColor: "#9ca3af",
+                                backgroundColor: "#A05264", // Softer dusty rose for quarters
                                 borderRadius: "1px",
                                 transform: "translateY(-50%)",
                             }}
@@ -143,7 +143,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 width: "40px",
                                 textAlign: "center",
                                 fontSize: "11px",
-                                color: "#6b7280",
+                                color: "#4A4A4A",           // Muted charcoal for quarter labels
                                 fontWeight: 500,
                                 userSelect: "none",
                             }}
@@ -171,7 +171,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                                 top: `${startTop}px`,
                                 height: `${barHeight}px`,
                                 width: "4px",
-                                backgroundColor: "hsl(var(--destructive))",
+                                backgroundColor: "#B75D6F", // Lighter velvet coral for event bars
                                 borderRadius: "2px",
                             }}
                         />
