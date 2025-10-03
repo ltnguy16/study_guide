@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export { default as SideNav } from "./side_nav"
+export { default as SideNav } from "./side-nav"
 export * from "./ui"
 export { LogoutButton } from "./logout_button"
 export { formatDate } from "./format"

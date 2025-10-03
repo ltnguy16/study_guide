@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/shared";
 import { Menu, ListCollapse, CalendarClockIcon, X } from "lucide-react";
+import { ThemeSwitcher } from "./theme-switcher";
 
 interface NavItem {
     label: string;
@@ -172,6 +173,12 @@ export default function SideNav() {
                         );
                     })}
                 </nav>
+                <div className={cn(
+                    "p-2 border-t border-gray-200 dark:border-gray-700",
+                    collapsed ? "flex justify-center" : "flex justify-start"
+                    )}>
+                        <ThemeSwitcher />
+                    </div>
             </aside>
         </>
     );
