@@ -3,111 +3,29 @@
 import { InfoTooltip } from "@/shared";
 import { MessageSquareWarning, Edit } from "lucide-react";
 import React, { useState } from "react";
+import { useFetchQuestions } from "../services/fetch/fetch-questions";
 
-type ImportantType = "Loi" | "My" | "Both";
+type ImportantType = "Loi" | "My" | "Important";
 
-interface Question {
+export interface Question {
   id: number;
   question: string;
-  loisAnswer: string;
-  myAnswer: string;
+  loi: string;
+  my: string;
   important?: ImportantType;
   category?: string;
 }
 
-const questions: Question[] = [
-  {
-    id: 1,
-    question: "Weight ? 95lb | 138lb",
-    loisAnswer: "95lb",
-    myAnswer: "138lb",
-    category: "physique",
-  },
-  {
-    id: 2,
-    question: "Did your parents approve of the match? Why or why not?",
-    loisAnswer: "Loi's parent doesn’t like it",
-    myAnswer: "My's parent is very open, they want My’s decision to be the most important.",
-    important: "Both",
-    category: "acquaintances",
-  },
-  {
-    id: 3,
-    question: "How many TV sets are in your house? In which rooms?",
-    loisAnswer: "No",
-    myAnswer: "No",
-    category: "living",
-  },
-  {
-    id: 4,
-    question: "Habit",
-    loisAnswer: "Easily getting cold/moody when cold\nSmall allergy with pet\nMake weird noise when it happened",
-    myAnswer: "Easily cold, pets can trigger mild allergy, sometimes strange noises occur when stressed",
-    important: "Loi",
-    category: "living",
-  },
-  {
-    id: 5,
-    question: "Beauty Mark / Something special",
-    loisAnswer: "A heart Mole on my back left shoulder\nA small scar since birth on the front left shoulder",
-    myAnswer: "Mole on the right side, underneath my collarbone\nMole next to my belly button",
-    important: "My",
-    category: "physique",
-  },
-  {
-    id: 6,
-    question: "Favorite color for Bra/underwear",
-    loisAnswer: "Brand Victoria Secret\nColor: Basic Black\nMonday through Sunday: Black\nBoxer, no preference on color",
-    myAnswer: "Blue\nTank top for undershirt, black",
-    important: "Both",
-    category: "living",
-  },
-  {
-    id: 7,
-    question: "First Impression",
-    loisAnswer: "Loi is a cute funny guy\nHis personality made me win over time",
-    myAnswer: "Originally I thought she is too cute and not my type. Over time I was drawn to her self-sacrifice and stubbornness.",
-    category: "history",
-  },
-  {
-    id: 8,
-    question: "Bad habit while living together",
-    loisAnswer: "If mad, I delete every contact with Loi.",
-    myAnswer: "Keep forgetting toilet seat down.\nForget to do dishes.\nAlways first to chase after fights.\nStay up too late.\nSleep through alarms.",
-    important: "My",
-    category: "living",
-  },
-  {
-    id: 9,
-    question: "Ex(s)",
-    loisAnswer: "One before\nSex buddy initially, both lost virginity same day.",
-    myAnswer: "One before",
-    category: "history",
-  },
-  {
-    id: 10,
-    question: "Favorite weekend activity",
-    loisAnswer: "Playing games and sleeping in",
-    myAnswer: "Sleeping in",
-    category: "living",
-  },
-  {
-    id: 11,
-    question: "Morning routine",
-    loisAnswer: "Meditation and tea",
-    myAnswer: "Workout and coffee",
-    important: "Loi",
-    category: "living",
-  },
-  {
-    id: 12,
-    question: "Biggest fear",
-    loisAnswer: "Being alone",
-    myAnswer: "Failure",
-    important: "Both",
-    category: "personal",
-  },
-];
+function convertString(text: string): string {
+  const withNewlines = text.replace(/\\n/g, "\n");
+  // Split into lines
+  const lines = withNewlines.split("\n");
+  // Add bullet at start of every line
+  const bulletedLines = lines.map(line => `• ${line.trim()}`);
+  // Join back into a single string with real newlines
+  return bulletedLines.join("\n");
+}
+
 
 function ImportantBadge({ important }: { important?: ImportantType }) {
   if (!important) return null;
@@ -115,13 +33,13 @@ function ImportantBadge({ important }: { important?: ImportantType }) {
   const colorMap: Record<ImportantType, string> = {
     Loi: "bg-blue-600",
     My: "bg-purple-600",
-    Both: "bg-red-600",
+    Important: "bg-red-600",
   };
 
   const labelMap: Record<ImportantType, string> = {
     Loi: "Marked important by Loi",
-    My: "Marked important by You",
-    Both: "Marked important by Both",
+    My: "Marked important by My",
+    Important: "Marked Important!",
   };
 
   return (
@@ -131,7 +49,6 @@ function ImportantBadge({ important }: { important?: ImportantType }) {
         aria-label={labelMap[important]}
       >
         <MessageSquareWarning size={14} />
-        <span>{important === "Both" ? "Important" : important}</span>
       </span>
     </InfoTooltip>
   );
@@ -142,7 +59,12 @@ export default function QuestionsPageContent() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [multiExpandedIds, setMultiExpandedIds] = useState<Set<number>>(new Set());
   const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  const { questions, loading, error } = useFetchQuestions();
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
+  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   const toggleExpandSingle = (id: number) => setExpandedId(expandedId === id ? null : id);
   const toggleExpandMulti = (id: number) => {
@@ -249,7 +171,7 @@ export default function QuestionsPageContent() {
 
       {/* Question list */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {questions.map(({ id, question, loisAnswer, myAnswer, important, category }) => {
+        {questions.map(({ id, question, loi, my, important, category }) => {
           const expanded = isExpanded(id);
           return (
             <li
@@ -313,20 +235,21 @@ export default function QuestionsPageContent() {
                   expanded ? "max-h-[360px] opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
                 }`}
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <section className="bg-background dark:bg-background rounded-md p-2 border border-border shadow-inner whitespace-pre-line">
-                    <h3 className="text-xs font-semibold text-accent mb-1 select-none">
-                      Loi's Answer
-                    </h3>
-                    <p className="text-xs leading-snug">{loisAnswer}</p>
-                  </section>
-                  <section className="bg-background dark:bg-background rounded-md p-2 border border-border shadow-inner whitespace-pre-line">
-                    <h3 className="text-xs font-semibold text-accent mb-1 select-none">
-                      My's Answer
-                    </h3>
-                    <p className="text-xs leading-snug">{myAnswer}</p>
-                  </section>
+                <div
+                  className={`max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
+                  style={{ scrollbarWidth: 'thin' }}
+                >
+                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">Loi's Answer</h3>
+                  <p className="text-xs leading-snug">{convertString(loi)}</p>
                 </div>
+                <div
+                  className={`max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
+                  style={{ scrollbarWidth: 'thin' }}
+                >
+                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">My's Answer</h3>
+                  <p className="text-xs leading-snug">{convertString(my)}</p>
+                </div>
+
               </div>
             </li>
           );
