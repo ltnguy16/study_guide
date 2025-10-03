@@ -3,16 +3,10 @@ import { CreateServerClient } from "@/lib/supabase/server";
 import AuthButton from "@/shared/server_components/auth_button";
 
 export default async function Home() {
-  // Create Supabase client
   const supabase = await CreateServerClient();
-
-  // Get current user session
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Redirect authenticated users to timeline dashboard
-  if (user) {
-    redirect("/timeline");
-  }
+  if (user) redirect("/timeline");
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground">

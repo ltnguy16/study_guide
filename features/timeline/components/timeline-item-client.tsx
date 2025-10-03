@@ -5,17 +5,18 @@ import { useTimelineItemData } from "./timeline-item-data";
 import { TimelineItem } from "./timeline-item";
 import AddTimelineDialogContainer from "./add-timeline-dialog.container";
 import { TimelineEvent } from "./timeline-item-data";
+import { useHideDots } from "@/app/timeline/hide-dots-context";
 
-interface TimelineItemClientProps {
-  hideDots: boolean;
-}
 
-export function TimelineItemClient({ hideDots } : TimelineItemClientProps){
+export function TimelineItemClient(){
+    const { hideDots } = useHideDots();
     const { events: initialEvents, loading, fetchData } = useTimelineItemData();
-
     const [events, setEvents] = useState<TimelineEvent[]>(initialEvents);
     const [openDotId, setOpenDotId] = useState<number | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+
+    console.log("TimelineItemClient hideDots =", hideDots);
 
     // Sync local events state with timeline data from hook
     useEffect(() => {

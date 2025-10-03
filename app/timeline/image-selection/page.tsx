@@ -1,11 +1,12 @@
 // /app/timeline/image-selection/page.js
+import ImageSelectionContent from '@/features/timeline-selection/image-selection-content';
 import { Suspense } from 'react';
-import ImageSelectionPage from './image-selection-page';
+
 
 export default function Page() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <ImageSelectionPage />
+            <ImageSelectionContent />
         </Suspense>
     );
 }

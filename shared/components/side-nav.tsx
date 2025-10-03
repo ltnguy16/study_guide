@@ -4,7 +4,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/shared";
-import { Menu, ListCollapse, CalendarClockIcon, X } from "lucide-react";
+import { Menu, ListCollapse, CalendarClockIcon, X, BookOpen } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
 
 interface NavItem {
@@ -28,7 +28,10 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
     const [isMidCollapse, setIsMidCollapse] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    const navLinks: NavItem[] = [{ label: "Timeline", href: "/timeline", icon: CalendarClockIcon }];
+    const navLinks: NavItem[] = [
+        { label: "Timeline", href: "/timeline", icon: CalendarClockIcon },
+        { label: "Questions", href: "/questions", icon: BookOpen }, 
+    ];
 
     const toggleCollapsed = useCallback(() => {
         if (!collapsed) {

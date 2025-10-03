@@ -7,7 +7,7 @@ import { ImageUpscale } from "lucide-react";
 import { FetchEventImages } from "@/features/timeline/service/fetch/fetch-event-images";
 import { FetchSignedImageUrl } from "@/shared/service/fetch/fetch-signed-image-url";
 
-export default function ImageSelectionPage() {
+export default function ImageSelectionContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const eventId = searchParams.get("eventId");
