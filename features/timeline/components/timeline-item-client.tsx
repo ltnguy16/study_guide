@@ -6,7 +6,11 @@ import { TimelineItem } from "./timeline-item";
 import AddTimelineDialogContainer from "./add-timeline-dialog.container";
 import { TimelineEvent } from "./timeline-item-data";
 
-export function TimelineItemClient() {
+interface TimelineItemClientProps {
+  hideDots: boolean;
+}
+
+export function TimelineItemClient({ hideDots } : TimelineItemClientProps){
     const { events: initialEvents, loading, fetchData } = useTimelineItemData();
 
     const [events, setEvents] = useState<TimelineEvent[]>(initialEvents);
@@ -29,9 +33,6 @@ export function TimelineItemClient() {
         if (openDotId === deletedId) setOpenDotId(null);
     };
 
-    // Determine if any dialog is open to hide dots when adding a new event
-    const isAnyDialogOpen = openDotId !== null || addDialogOpen;
-
     return (
         <>
             {loading && <div>Loading timeline...</div>}
@@ -42,7 +43,7 @@ export function TimelineItemClient() {
                     openDotId={openDotId}
                     onOpen={(id) => setOpenDotId(id)}
                     onClose={() => setOpenDotId(null)}
-                    hideDots={addDialogOpen}
+                    hideDots={hideDots || addDialogOpen}
                     onEventUpdate={handleEventUpdate}
                     onEventDelete={handleEventDelete}
                 />

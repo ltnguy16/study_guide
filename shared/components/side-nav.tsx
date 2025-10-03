@@ -12,9 +12,15 @@ interface NavItem {
     href?: string;
     icon: React.ElementType;
     external?: boolean;
+
 }
 
-export default function SideNav() {
+interface SideNavProps {
+  hideDots: boolean;
+  setHideDots: (val: boolean) => void;
+}
+
+export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -60,6 +66,10 @@ export default function SideNav() {
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [mobileOpen]);
+
+    useEffect(() => {
+        setHideDots(mobileOpen);
+    }, [mobileOpen, setHideDots]);
 
     return (
         <>

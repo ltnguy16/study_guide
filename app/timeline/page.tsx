@@ -15,8 +15,7 @@ export default async function TimelineItemPage() {
 
     return (
         <div className="flex flex-col gap-6 p-6 w-full">
-            <h1 className="text-2xl font-bold text-primary dark:text-primary-foreground">Timeline</h1>
-            <TimelineItemClient />
+            
         </div>
     );
 }
