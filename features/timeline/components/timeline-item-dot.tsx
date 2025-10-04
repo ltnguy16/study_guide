@@ -116,6 +116,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                 <TimelineDialogPortal>
                     <div
                         id="timeline-dialog"
+                        className="scroll-container"
                         style={{
                             position: "fixed",
                             top: position.top,
@@ -125,7 +126,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                             backgroundColor: "hsl(var(--dialog))",
                             color: "hsl(var(--dialog-foreground))",
                             borderRadius: "8px",
-                            padding: "24px 24px 24px 10px",
+                            padding: "18px 18px 18px 12px",
                             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
                             maxWidth: `calc(100vw - ${position.left + 24}px)`,
                             minWidth: "250px",

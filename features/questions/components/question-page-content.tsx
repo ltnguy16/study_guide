@@ -4,11 +4,12 @@ import { InfoTooltip } from "@/shared";
 import { MessageSquareWarning, Edit, X, CircleX } from "lucide-react";
 import React, { useState } from "react";
 import { useFetchQuestions } from "../services/fetch/fetch-questions";
+import QuestionUpsertDialog from "./question-upsert-dialog";
 
-type ImportantType = "Loi" | "My" | "Important";
+export type ImportantType = "Loi" | "My" | "Important";
 
 export interface Question {
-  id: number;
+  id?: number;
   question: string;
   loi: string;
   my: string;
@@ -59,10 +60,14 @@ export default function QuestionsPageContent() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [multiExpandedIds, setMultiExpandedIds] = useState<Set<number>>(new Set());
   const [isCollapsed, setIsCollapsed] = useState(false);
-  
-  const { questions, loading, error } = useFetchQuestions();
-  const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
-  
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<"insert" | "update">("insert");
+  const [dialogInitial, setDialogInitial] = useState<Question | undefined>(undefined);
+  const [refreshToggle, setRefreshToggle] = useState(false);
+  const { questions, loading, error } = useFetchQuestions(refreshToggle);
+
+  const refreshQuestions = () => setRefreshToggle(prev => !prev);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -73,10 +78,10 @@ export default function QuestionsPageContent() {
     else nextSet.add(id);
     setMultiExpandedIds(nextSet);
   };
-  const isExpanded = (id: number): boolean => {
+  const isExpanded = (id?: number): boolean => {
     if (mode === "showAll") return true;
     if (mode === "single") return expandedId === id;
-    if (mode === "multi") return multiExpandedIds.has(id);
+    if (mode === "multi") return multiExpandedIds.has(id!);
     return false;
   };
   const handleExpandToggle = (id: number) => {
@@ -90,9 +95,8 @@ export default function QuestionsPageContent() {
       {/* Fixed floating container at lower right */}
       <div
         style={{ bottom: 16, right: 16 }}
-        className={`fixed z-50 bg-white/30 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-xl px-2 py-1 flex flex-col items-center space-y-3 text-sm font-normal select-none w-max transition-all overflow-hidden ${
-          isCollapsed ? "w-12 h-12" : "w-auto h-auto"
-        }`}
+        className={`fixed z-50 bg-white/30 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-xl px-2 py-1 flex flex-col items-center space-y-3 text-sm font-normal select-none w-max transition-all overflow-hidden ${isCollapsed ? "w-12 h-12" : "w-auto h-auto"
+          }`}
       >
         {isCollapsed ? (
           <button
@@ -110,33 +114,30 @@ export default function QuestionsPageContent() {
             <div className="flex rounded-md overflow-hidden border border-border">
               <button
                 onClick={() => setMode("showAll")}
-                className={`px-3 py-1 text-sm transition ${
-                  mode === "showAll"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/70"
-                }`}
+                className={`px-3 py-1 text-sm transition ${mode === "showAll"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted hover:bg-muted/70"
+                  }`}
                 aria-pressed={mode === "showAll"}
               >
                 Show All
               </button>
               <button
                 onClick={() => setMode("single")}
-                className={`px-3 py-1 text-sm transition ${
-                  mode === "single"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/70"
-                }`}
+                className={`px-3 py-1 text-sm transition ${mode === "single"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted hover:bg-muted/70"
+                  }`}
                 aria-pressed={mode === "single"}
               >
                 Flashcard
               </button>
               <button
                 onClick={() => setMode("multi")}
-                className={`px-3 py-1 text-sm transition ${
-                  mode === "multi"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/70"
-                }`}
+                className={`px-3 py-1 text-sm transition ${mode === "multi"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted hover:bg-muted/70"
+                  }`}
                 aria-pressed={mode === "multi"}
               >
                 Toggle
@@ -146,7 +147,11 @@ export default function QuestionsPageContent() {
             {/* Second row: add button left, collapse right */}
             <div className="flex items-center justify-between gap-2">
               <button
-                onClick={() => alert("Add New Flash clicked")}
+                onClick={() => {
+                  setDialogOpen(true);
+                  setDialogMode("insert");
+                  setDialogInitial(undefined);
+                }}
                 className="flex-1 px-3 py-1 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition text-center"
               >
                 + Add Questions
@@ -172,12 +177,12 @@ export default function QuestionsPageContent() {
             <li
               key={id}
               className={`bg-muted dark:bg-muted/80 border border-border dark:border-border/70 rounded-md p-3 cursor-pointer select-none shadow-sm transition-shadow hover:shadow-md flex flex-col justify-start`}
-              onClick={() => handleExpandToggle(id)}
+              onClick={() => handleExpandToggle(id!)}
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  handleExpandToggle(id);
+                  handleExpandToggle(id!);
                 }
               }}
               aria-expanded={expanded}
@@ -197,8 +202,11 @@ export default function QuestionsPageContent() {
                   <button
                     type="button"
                     onClick={(e) => {
-                      e.stopPropagation(); // prevent card expand toggle on button click
-                      setEditingQuestionId(id);
+                      e.stopPropagation();
+                      setDialogOpen(true);
+                      setDialogMode("update");
+                      // Find the full question by id
+                      setDialogInitial(questions.find(q => q.id === id));
                     }}
                     className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                     aria-label={`Edit question ${id}`}
@@ -218,20 +226,17 @@ export default function QuestionsPageContent() {
 
               {/* Expandable answers */}
               <div
-                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
-                  expanded ? "max-h-[360px] opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
-                }`}
+                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${expanded ? "max-h-[360px] opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
+                  }`}
               >
                 <div
-                  className={`max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
-                  style={{ scrollbarWidth: 'thin' }}
+                  className={`scroll-container max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
                 >
                   <h3 className="text-xs font-semibold text-accent mb-1 select-none">Loi's Answer</h3>
                   <p className="text-xs leading-snug">{convertString(loi)}</p>
                 </div>
                 <div
-                  className={`max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
-                  style={{ scrollbarWidth: 'thin' }}
+                  className={`scroll-container max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
                 >
                   <h3 className="text-xs font-semibold text-accent mb-1 select-none">My's Answer</h3>
                   <p className="text-xs leading-snug">{convertString(my)}</p>
@@ -246,6 +251,17 @@ export default function QuestionsPageContent() {
       <p className="mt-6 text-[10px] text-muted-foreground text-center select-none">
         Click or press enter/space on a question to reveal the answers.
       </p>
+      <QuestionUpsertDialog
+        open={dialogOpen}
+        mode={dialogMode}
+        initial={dialogInitial}
+        onClose={() => setDialogOpen(false)}
+        onSuccess={() => {
+          setDialogOpen(false);
+          refreshQuestions();
+        }}
+      />
     </div>
+
   );
 }

@@ -52,7 +52,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
                             aria-label="Start date"
                         />
                     </label>
@@ -62,7 +62,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
                             aria-label="End date"
                         />
                     </label>
@@ -72,7 +72,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                     <button
                         onClick={onCancel}
                         disabled={loading}
-                        className="rounded-md bg-muted text-muted-foreground px-4 py-2 hover:opacity-80 transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-muted"
+                        className="flex items-center px-3 py-2 text-sm font-semibold bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 focus:outline-none focus:ring-2 focus:ring-destructive transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Cancel
@@ -80,7 +80,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                     <button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="rounded-md bg-primary text-primary-foreground px-4 py-2 hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
+                        className="ml-auto flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Submit

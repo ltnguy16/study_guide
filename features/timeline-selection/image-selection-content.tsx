@@ -113,7 +113,7 @@ export default function ImageSelectionContent() {
             ) : (
                 <div className="flex flex-col md:flex-row w-full gap-8">
                     {/* Available images */}
-                    <div className="w-full md:w-2/3 border border-border rounded-lg p-6 overflow-y-auto max-h-[70vh]">
+                    <div className="scroll-container w-full md:w-2/3 border border-border rounded-lg p-6 bg-card text-card-foreground max-h-[70vh]">
                         {availableImages.map((imgName) => (
                             <div
                                 key={imgName}
@@ -134,7 +134,7 @@ export default function ImageSelectionContent() {
                     </div>
 
                     {/* Selected Preview */}
-                    <div className="w-full md:w-1/3 border border-border rounded-lg p-6 flex flex-col items-center overflow-y-auto max-h-[70vh]">
+                    <div className="scroll-container w-full md:w-1/3 border border-border rounded-lg p-6 flex flex-col items-center bg-card text-card-foreground max-h-[70vh]">
                         {selectedImages.size > 0 && (
                             <div className="w-full space-y-4">
                                 {[...selectedImages].map((imgName) => {

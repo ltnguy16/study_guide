@@ -36,7 +36,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
 
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-    // Update form data and mark field as touched to show validation
+    // Update form data and mark field as touched
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -44,7 +44,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
         setTouched({ ...touched, [e.target.name]: true });
     };
 
-    // Check validity for required fields only if touched
+    // Validate required fields if touched
     const isFieldValid = (field: string) => {
         if (!touched[field]) return true;
         if (
@@ -64,7 +64,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
         !formData.eventend.trim() ||
         !formData.location.trim();
 
-    // Submit handler with validation
     const handleSubmit = async () => {
         if (hasErrors) {
             alert(
@@ -81,7 +80,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
 
         await onAdd(dataToSend);
 
-        // Reset form and touched state after successful submit
+        // Reset form and touched state after submit
         setFormData({
             name: "",
             eventstart: "",
@@ -91,7 +90,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
             sharedview: "",
             location: "",
         });
-
         setTouched({});
         onClose();
     };
@@ -99,12 +97,18 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-auto shadow-lg border-2 border-gray-200 dark:border-gray-700">
-                <h2 className="text-xl font-semibold mb-6 text-primary dark:text-primary-foreground">
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 dark:bg-black/60"
+        /* Changed overlay opacity and color for consistency */
+        >
+            <div
+                className="scroll-container bg-dialog text-dialog-foreground border border-border rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] shadow-2xl"
+            >
+                <h2 className="text-xl font-semibold mb-6 text-primary">
                     Add New Timeline Event
                 </h2>
 
+                {/* Form fields */}
                 <InputField
                     label="Name"
                     id="name"
@@ -172,12 +176,15 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     placeholder="Location"
                     value={formData.location}
                     onChange={handleChange}
+                    required
+                    valid={isFieldValid("location")}
                 />
 
+                {/* Button group */}
                 <div className="flex justify-end space-x-3 mt-6">
                     <button
                         onClick={onClose}
-                        className="bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded transition"
+                        className="flex items-center px-3 py-2 text-sm font-semibold bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 focus:outline-none focus:ring-2 focus:ring-destructive transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Cancel
@@ -185,8 +192,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     <button
                         onClick={handleSubmit}
                         disabled={hasErrors}
-                        className={`px-4 py-2 rounded text-white transition ${hasErrors ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-                            }`}
+                        className="ml-auto flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Add
@@ -211,10 +217,10 @@ const InputField: React.FC<{
     <div className="mb-5">
         <label
             htmlFor={id}
-            className={`block mb-1 font-medium ${valid ? "text-foreground dark:text-foreground" : "text-destructive"}`}
+            className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"
+                }`}
         >
-            {label}
-            {required && <span className="text-destructive">*</span>}
+            {label} {required && <span className="text-destructive">*</span>}
         </label>
         <input
             type={type}
@@ -226,8 +232,8 @@ const InputField: React.FC<{
             required={required}
             aria-invalid={!valid}
             aria-required={required}
-            className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition bg-background text-foreground dark:bg-background dark:text-foreground ${valid ? "border-input" : "border-destructive"
-                }`}
+            className={`w-full rounded-md border px-3 py-2 text-sm bg-input focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition ${valid ? "border-input" : "border-destructive"
+                } text-foreground dark:bg-background dark:text-foreground`}
         />
     </div>
 );
@@ -241,7 +247,7 @@ const TextareaField: React.FC<{
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }> = ({ label, id, name, placeholder, value, onChange }) => (
     <div className="mb-5">
-        <label htmlFor={id} className="block mb-1 font-medium text-foreground dark:text-foreground">
+        <label htmlFor={id} className="block mb-1 font-semibold text-foreground dark:text-foreground">
             {label}
         </label>
         <textarea
@@ -251,8 +257,9 @@ const TextareaField: React.FC<{
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className="w-full border border-input rounded px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition bg-background text-foreground dark:bg-background dark:text-foreground"
-        ></textarea>
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground
+                                focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
+        />
     </div>
 );
 

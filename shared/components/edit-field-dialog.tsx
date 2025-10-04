@@ -33,7 +33,7 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-field-dialog-title"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm scroll-container"
         >
             <div className="bg-dialog text-dialog-foreground p-6 rounded-xl w-full max-w-sm shadow-lg space-y-6 border border-border">
                 <h2 id="edit-field-dialog-title" className="text-lg font-semibold">
@@ -49,7 +49,7 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
                     rows={4}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    className="w-full p-2 rounded-md border border-border bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                    className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
                     aria-label={title}
                 />
 
@@ -57,7 +57,7 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
                     <button
                         onClick={onCancel}
                         disabled={loading}
-                        className="rounded-md bg-muted text-muted-foreground px-4 py-2 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-muted"
+                        className="flex items-center px-3 py-2 text-sm font-semibold bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 focus:outline-none focus:ring-2 focus:ring-destructive transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Cancel
@@ -65,7 +65,7 @@ export const EditFieldDialog: React.FC<EditFieldDialogProps> = ({
                     <button
                         onClick={() => onSubmit(value)}
                         disabled={loading}
-                        className="rounded-md bg-primary text-primary-foreground px-4 py-2 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
+                        className="ml-auto flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Submit

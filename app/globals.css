@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== CSS VARIABLES FOR THEMES ===== */
 @layer base {
   :root {
     /* Light Theme Colors */
@@ -9,87 +10,59 @@
     /* Soft Cream */
     --foreground: 220 37% 23%;
     /* Space Cadet */
-
     --card: 30 50% 92%;
     --card-foreground: 220 37% 23%;
-
     --popover: 30 50% 92%;
     --popover-foreground: 220 37% 23%;
-
     --secondary: 213 19% 58%;
     --secondary-foreground: 30 50% 92%;
-
     --muted: 30 50% 85%;
-
-
     --highlight: 34 52% 71%;
     --highlight-foreground: 220 37% 23%;
-
-    /* Caput Mortuum */
     --destructive: 4 60% 40%;
-    /* Slightly richer destructive */
     --destructive-foreground: 30 50% 92%;
-
     --dialog: 0 0% 100%;
-    /* white background */
     --dialog-foreground: 0 0% 0%;
-    /* black text */
     --border-light: 220 15% 80%;
-    /* light gray border */
     --accent: 340 65% 55%;
-    /* keep your accent color */
     --accent-foreground: 340 65% 95%;
-    --primary: 20 70% 60%; /* Warm coral/orange hue */
-    --primary-foreground: 30 90% 98%; /* Very light cream text */
+    --primary: 20 70% 60%;
+    /* Warm coral/orange hue */
+    --primary-foreground: 30 90% 98%;
     --muted-foreground: 220 20% 65%;
-
-    /* muted text */
     --input: 210 21% 80%;
     --ring: 220 37% 23%;
-
     --chart-1: 220 37% 23%;
     --chart-2: 213 19% 58%;
     --chart-3: 34 52% 71%;
     --chart-4: 22 32% 33%;
     --chart-5: 4 50% 30%;
-
     --radius: 0.75rem;
+
+
   }
 
   .dark {
     --background: 220 37% 12%;
     /* Dark background */
-
-    /* Softer but bright text for readability */
     --foreground: 210 15% 85%;
-    /* Light gray-blue, easier on eyes */
-
-    /* Card foreground soft white-gray */
-    --card-foreground: 210 20% 85%;
-
-    /* Popover foreground */
+    --card: 220 15% 18%;
+    --card-foreground: 200 20% 90%;
     --popover-foreground: 210 20% 85%;
-
-    /* Destructive text softer red */
     --destructive-foreground: 30 50% 92%;
-
     --dialog: 220 15% 18%;
-    /* darker blue/gray background */
+    /* darker blue/gray */
     --dialog-foreground: 200 20% 90%;
-    /* light gray text */
     --border: 220 15% 35%;
-    /* darker border */
     --accent: 340 65% 55%;
     --accent-foreground: 340 65% 95%;
     --primary: 220 50% 70%;
     --primary-foreground: 220 50% 98%;
     --muted: 220 20% 35%;
     --muted-foreground: 220 20% 65%;
-
-    /* Borders stronger */
     --input: 210 20% 45%;
     --ring: 350 80% 55%;
-    
+
   }
 
   * {
@@ -115,6 +88,38 @@
   }
 }
 
+/* ===== SCROLL CONTAINER AND SCROLLBAR STYLES ===== */
+@layer components {
+  .scroll-container {
+    padding-right: 8px;
+    /* fits scrollbar inside rounded/bordered container */
+    overflow-y: auto;
+    /* Limit height if needed: max-height: 70vh; */
+  }
+
+  .scroll-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--accent));
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .scroll-container::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  /* Firefox */
+  .scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--accent)) transparent;
+  }
+}
+
+/* ===== TOAST AND OTHER COMPONENTS REMAIN AS BEFORE ===== */
 @layer components {
   .toast-root {
     margin: 0;
@@ -146,13 +151,7 @@
   }
 }
 
-@layer components {
-  .scrollable-container {
-    @apply max-h-[70vh] overflow-y-auto;
-  }
-}
-
-html,
+.html,
 body,
 #__next {
   height: 100%;

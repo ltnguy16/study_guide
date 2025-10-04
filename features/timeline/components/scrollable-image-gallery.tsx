@@ -42,43 +42,41 @@ export const ScrollableImageGallery: React.FC<ScrollableImageGalleryProps> = ({
             </button>
 
             <div
-                className="flex flex-row flex-nowrap gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-accent scrollbar-track-card w-full max-w-full pb-2"
+                className="flex flex-row flex-nowrap gap-1 overflow-x-auto w-full max-w-full"
                 style={{ WebkitOverflowScrolling: "touch", boxSizing: "border-box" }}
             >
                 {displayedImages.map((path, idx) => (
                     <div
                         key={idx}
-                        className="relative w-24 h-24 min-w-[80px] bg-gray-200 rounded-md overflow-hidden shadow-lg p-2 border border-border xs:w-20 xs:h-20"
-                        style={{ flex: "0 0 auto" }}
+                        className="relative"
                     >
                         <SecureImage
                             path={`collections/${path}`}
                             alt={`event-img-${idx}`}
-                            size={80}
-                            className="rounded-md w-full h-full object-cover"
+                            size={102}
+                            className="rounded-md w-full h-full object-cover border border-accent"
                         />
-                        <div className="absolute inset-x-0 bottom-0 border-t border-gray-300" />
                         <div
                             onClick={() => onRemoveImage(path)}
                             role="button"
                             aria-label={`Remove ${path}`}
-                            className="absolute top-2 right-2 flex items-center justify-center w-8 h-8 bg-gray-700 rounded-full text-white hover:bg-gray-800 transition-all duration-200 ease-in-out cursor-pointer"
+                            className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 bg-gray-700 rounded-full text-white hover:bg-gray-800 transition-all duration-200 ease-in-out cursor-pointer"
                         >
-                            <Trash className="h-4 w-4" />
+                            <Trash className="h-3 w-3" />
                         </div>
                     </div>
                 ))}
             </div>
 
-            <div className="flex space-x-2 mt-2">
+            <div className="flex space-x-2 mt-4">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                         key={page}
                         onClick={() => changePage(page)}
                         disabled={page === currentPage}
-                        className={`px-3 py-1 rounded ${page === currentPage
-                            ? "bg-accent text-white cursor-default"
-                            : "bg-gray-200 hover:bg-gray-300"
+                        className={`px-3 py-1 rounded font-medium transition ${page === currentPage
+                            ? "bg-accent text-accent-foreground cursor-default"
+                            : "bg-muted hover:bg-muted/80 dark:bg-muted/70 dark:hover:bg-muted/90 text-muted-foreground dark:text-muted-foreground"
                             }`}
                         aria-label={`Go to page ${page}`}
                     >
