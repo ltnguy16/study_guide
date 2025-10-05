@@ -65,6 +65,7 @@ export default function QuestionsPageContent() {
   const [dialogInitial, setDialogInitial] = useState<Question | undefined>(undefined);
   const [refreshToggle, setRefreshToggle] = useState(false);
   const { questions, loading, error } = useFetchQuestions(refreshToggle);
+  const [sortBy, setSortBy] = useState<ImportantType | "none">("none");
 
   const refreshQuestions = () => setRefreshToggle(prev => !prev);
 
@@ -89,6 +90,20 @@ export default function QuestionsPageContent() {
     if (mode === "single") toggleExpandSingle(id);
     else if (mode === "multi") toggleExpandMulti(id);
   };
+
+  const getSortPriority = (important?: ImportantType): number => {
+    if (!important) return 3;
+    if (sortBy === "Important") return important === "Important" ? 0 : important === "My" ? 1 : 2;
+    if (sortBy === "My") return important === "My" ? 0 : important === "Important" ? 1 : 2;
+    if (sortBy === "Loi") return important === "Loi" ? 0 : important === "Important" ? 1 : 2;
+    return 0;
+  };
+
+  const sortedQuestions = sortBy === "none"
+    ? questions
+    : [...questions].sort(
+      (a, b) => getSortPriority(a.important) - getSortPriority(b.important)
+    );
 
   return (
     <div className="relative p-4 max-w-7xl mx-auto min-h-screen bg-background text-foreground dark:text-foreground">
@@ -169,9 +184,39 @@ export default function QuestionsPageContent() {
 
         )}
       </div>
+      <div className="flex items-center justify-end mb-2 flex-wrap gap-2">
+        <div className="text-xs text-muted-foreground">Sort by:</div>
+        <div className="flex gap-1 sm:w-auto">
+          <button
+            onClick={() => setSortBy("none")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "none" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
+          >
+            Default
+          </button>
+          <button
+            onClick={() => setSortBy("Important")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "Important" ? "bg-red-600 text-white" : "bg-muted text-foreground"}`}
+          >
+            Important
+          </button>
+          <button
+            onClick={() => setSortBy("My")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "My" ? "bg-purple-600 text-white" : "bg-muted text-foreground"}`}
+          >
+            My
+          </button>
+          <button
+            onClick={() => setSortBy("Loi")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "Loi" ? "bg-blue-600 text-white" : "bg-muted text-foreground"}`}
+          >
+            Loi
+          </button>
+        </div>
+      </div>
+
       {/* Question list */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {questions.map(({ id, question, loi, my, important, category }) => {
+        {sortedQuestions.map(({ id, question, loi, my, important, category }) => {
           const expanded = isExpanded(id);
           return (
             <li
