@@ -56,7 +56,7 @@ function ImportantBadge({ important }: { important?: ImportantType }) {
 }
 
 export default function QuestionsPageContent() {
-  const [mode, setMode] = useState<"showAll" | "single" | "multi">("single");
+  const [mode, setMode] = useState<"showAll" | "single" | "multi">("showAll");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [multiExpandedIds, setMultiExpandedIds] = useState<Set<number>>(new Set());
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -65,7 +65,7 @@ export default function QuestionsPageContent() {
   const [dialogInitial, setDialogInitial] = useState<Question | undefined>(undefined);
   const [refreshToggle, setRefreshToggle] = useState(false);
   const { questions, loading, error } = useFetchQuestions(refreshToggle);
-  const [sortBy, setSortBy] = useState<ImportantType | "none">("none");
+  const [sortBy, setSortBy] = useState<ImportantType | "none">("Important");
 
   const refreshQuestions = () => setRefreshToggle(prev => !prev);
 

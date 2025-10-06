@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -62,6 +64,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                         selectsStart
                         startDate={startDate}
                         endDate={endDate}
+                        wrapperClassName="w-full"
                         dateFormat="yyyy-MM-dd"
                         placeholderText="YYYY-MM-DD"
                         className="w-full rounded-md border px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition border-input"
@@ -84,6 +87,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                         minDate={startDate ?? undefined} // make sure end date >= start date
                         dateFormat="yyyy-MM-dd"
                         placeholderText="YYYY-MM-DD"
+                        wrapperClassName="w-full"
                         className="w-full rounded-md border px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition border-input"
                         disabled={loading}
                         showMonthDropdown
