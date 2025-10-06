@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
+import { Portal } from "react-overlays"; // Needed for custom portal container
 import "react-datepicker/dist/react-datepicker.css";
 
 interface EditDateRangeDialogProps {
@@ -12,6 +13,14 @@ interface EditDateRangeDialogProps {
     loading?: boolean;
 }
 
+
+export const CustomPopperContainer: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+    const container = typeof document !== "undefined" ? document.getElementById("datepicker-portal-container") : null;
+
+    if (!container || !children) return null;
+
+    return <Portal container={container}>{children as React.ReactElement}</Portal>;
+};
 export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
     initialStartDate,
     initialEndDate,
@@ -46,24 +55,23 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
             <div
-                className="bg-dialog text-dialog-foreground p-6 rounded-xl w-full max-w-sm shadow-lg space-y-6 border border-border"
+                className="bg-dialog text-dialog-foreground p-6 rounded-xl w-full max-w-sm shadow-lg space-y-6 border border-border relative"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="edit-date-range-dialog-title"
             >
-                <h2
-                    id="edit-date-range-dialog-title"
-                    className="text-lg font-semibold"
-                >
+                <h2 id="edit-date-range-dialog-title" className="text-lg font-semibold">
                     Edit Date Range
                 </h2>
 
+                {/* Portal container div inside dialog */}
+                <div id="datepicker-portal-container" style={{ position: "relative", zIndex: 1500 }} />
+
                 <div className="space-y-4">
-                    <label className="block font-medium text-sm mb-1">
-                        Date Range
-                    </label>
+                    <label className="block font-medium text-sm mb-1">Date Range</label>
                     <DatePicker
                         id="date-range-picker"
+                        wrapperClassName="w-full"
                         selectsRange
                         startDate={dates[0]}
                         endDate={dates[1]}
@@ -75,40 +83,42 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                         popperClassName="z-50"
                         isClearable
                         showPopperArrow={false}
-                        withPortal
                         autoComplete="off"
                         showMonthDropdown
                         showYearDropdown
                         dropdownMode="select"
                         disabled={loading}
+                        withPortal={false}
+                        popperContainer={CustomPopperContainer}
                         popperPlacement="bottom-start"
                         popperModifiers={[
                             {
-                                name: 'preventOverflow',
+                                name: "preventOverflow",
                                 options: {
-                                    boundary: 'viewport',
+                                    rootBoundary: "document",
+                                    tether: false,
+                                    altAxis: true,
                                 },
                             },
                             {
-                                name: 'offset',
+                                name: "offset",
                                 options: {
                                     offset: [0, 8],
                                 },
                             },
                             {
-                                name: 'flip',
+                                name: "flip",
                                 options: {
-                                    fallbackPlacements: ['top-start', 'bottom-start'],
+                                    fallbackPlacements: ["top-start", "bottom-start"],
                                 },
                             },
                             {
-                                name: 'computeStyles',
+                                name: "computeStyles",
                                 options: {
                                     adaptive: false,
                                 },
                             },
                         ] as any}
-
                     />
                 </div>
 
@@ -124,12 +134,13 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                     <button
                         onClick={handleSubmit}
                         disabled={loading || !dates[0] || !dates[1]}
-                        className="ml-auto flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >
                         Submit
                     </button>
                 </div>
+
             </div>
         </div>
     );

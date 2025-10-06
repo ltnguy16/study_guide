@@ -28,6 +28,7 @@
     "react": "^19.0.0",
     "react-datepicker": "^8.7.0",
     "react-dom": "^19.0.0",
+    "react-overlays": "^5.2.1",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
