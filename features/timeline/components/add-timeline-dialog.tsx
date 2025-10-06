@@ -227,7 +227,11 @@ const DateField: React.FC<{
     valid?: boolean;
 }> = ({ label, id, selected, onChange, required, valid = true }) => (
     <div className="mb-5">
-        <label className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"}`}>
+        <label
+            htmlFor={id}
+            className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"
+                }`}
+        >
             {label} {required && <span className="text-destructive">*</span>}
         </label>
         <DatePicker
@@ -236,11 +240,17 @@ const DateField: React.FC<{
             onChange={onChange}
             dateFormat="yyyy-MM-dd"
             placeholderText="YYYY-MM-DD"
-            className={`w-full rounded-md border px-3 py-2 text-sm bg-input focus:outline-none focus:ring-2 focus:ring-accent transition ${valid ? "border-input" : "border-destructive"} text-foreground dark:bg-background dark:text-foreground`}
+            className={`w-full rounded-md border px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition ${valid ? "border-input" : "border-destructive"
+                }`}
+            calendarClassName="!rounded-xl !border !border-border !bg-background !text-foreground dark:!bg-background dark:!text-foreground"
+            popperClassName="z-50"
             isClearable
             showPopperArrow={false}
             withPortal
             autoComplete="off"
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
         />
     </div>
 );

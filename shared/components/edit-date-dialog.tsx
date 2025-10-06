@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface EditDateRangeDialogProps {
     initialStartDate: string;
@@ -17,17 +19,28 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
     onCancel,
     loading = false,
 }) => {
-    const [startDate, setStartDate] = useState(initialStartDate);
-    const [endDate, setEndDate] = useState(initialEndDate);
+    const [dates, setDates] = useState<[Date | null, Date | null]>([
+        initialStartDate ? new Date(initialStartDate) : null,
+        initialEndDate ? new Date(initialEndDate) : null,
+    ]);
 
-    // Reset dates if props change (optional)
     useEffect(() => {
-        setStartDate(initialStartDate);
-        setEndDate(initialEndDate);
+        setDates([
+            initialStartDate ? new Date(initialStartDate) : null,
+            initialEndDate ? new Date(initialEndDate) : null,
+        ]);
     }, [initialStartDate, initialEndDate]);
 
+    const handleChange = (range: [Date | null, Date | null]) => {
+        setDates(range);
+    };
+
     const handleSubmit = () => {
-        onSubmit(startDate, endDate);
+        const [startDate, endDate] = dates;
+        onSubmit(
+            startDate ? startDate.toISOString().slice(0, 10) : "",
+            endDate ? endDate.toISOString().slice(0, 10) : ""
+        );
     };
 
     return (
@@ -46,26 +59,57 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                 </h2>
 
                 <div className="space-y-4">
-                    <label className="block">
-                        <span className="text-sm font-medium">Start Date</span>
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
-                            aria-label="Start date"
-                        />
+                    <label className="block font-medium text-sm mb-1">
+                        Date Range
                     </label>
-                    <label className="block">
-                        <span className="text-sm font-medium">End Date</span>
-                        <input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
-                            aria-label="End date"
-                        />
-                    </label>
+                    <DatePicker
+                        id="date-range-picker"
+                        selectsRange
+                        startDate={dates[0]}
+                        endDate={dates[1]}
+                        onChange={handleChange}
+                        dateFormat="yyyy-MM-dd"
+                        placeholderText="YYYY-MM-DD"
+                        className="w-full rounded-md border px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition border-input"
+                        calendarClassName="!rounded-xl !shadow-lg !border !border-border !bg-background !text-foreground dark:!bg-background dark:!text-foreground"
+                        popperClassName="z-50"
+                        isClearable
+                        showPopperArrow={false}
+                        withPortal
+                        autoComplete="off"
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        disabled={loading}
+                        popperPlacement="bottom-start"
+                        popperModifiers={[
+                            {
+                                name: 'preventOverflow',
+                                options: {
+                                    boundary: 'viewport',
+                                },
+                            },
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 8],
+                                },
+                            },
+                            {
+                                name: 'flip',
+                                options: {
+                                    fallbackPlacements: ['top-start', 'bottom-start'],
+                                },
+                            },
+                            {
+                                name: 'computeStyles',
+                                options: {
+                                    adaptive: false,
+                                },
+                            },
+                        ] as any}
+
+                    />
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-2">
@@ -79,7 +123,7 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
                     </button>
                     <button
                         onClick={handleSubmit}
-                        disabled={loading}
+                        disabled={loading || !dates[0] || !dates[1]}
                         className="ml-auto flex items-center px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-accent transition disabled:opacity-60 disabled:cursor-not-allowed"
                         type="button"
                     >

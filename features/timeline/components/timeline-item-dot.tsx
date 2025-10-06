@@ -24,6 +24,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
     onEventDelete,
 }) => {
     const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+    const [isHovered, setIsHovered] = useState(false);
     const dotRef = useRef<HTMLDivElement>(null);
 
     const updatePosition = () => {
@@ -108,8 +109,26 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                     if (e.key === "Enter" || e.key === " ") toggle();
                 }}
             >
-                {/* Circle icon with foreground accent color */}
-                <Circle color="hsl(var(--accent-foreground))" size={16} />
+                <div
+                    ref={dotRef}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onFocus={() => setIsHovered(true)}
+                    onBlur={() => setIsHovered(false)}
+                /* existing props */
+                >
+                    <Circle color="hsl(var(--accent-foreground))" size={12} />
+
+                    {isHovered && (
+                        <div
+                            role="tooltip"
+                            className="absolute left-full ml-2 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md bg-black bg-opacity-80 text-white text-xs px-2 py-1 shadow-lg pointer-events-none select-none"
+                            style={{ zIndex: 110 }}
+                        >
+                            {event.name}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {isOpen && position && (
