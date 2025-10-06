@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { CircleX, Trash, Save, Loader2 } from "lucide-react";
-import { ImportantType, Question } from "./question-page-content";
 import { DeleteQuestion } from "../services/delete/delete-question";
 import { InsertQuestion } from "../services/upsert/insert-question";
 import { UpdateQuestion } from "../services/upsert/update-question";
+import { ImportantType, Question } from "@/shared/components/typing";
 
 type DialogMode = "insert" | "update";
 
