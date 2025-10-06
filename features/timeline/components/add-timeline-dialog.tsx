@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { TimelineEvent } from "./timeline-item-data";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type FormData = {
     name: string;
-    eventstart: string;
-    eventend: string;
+    eventstart: Date | null;
+    eventend: Date | null;
     loiview: string;
     myview: string;
     sharedview: string;
@@ -26,8 +28,8 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
 }) => {
     const [formData, setFormData] = useState<FormData>({
         name: "",
-        eventstart: "",
-        eventend: "",
+        eventstart: null,
+        eventend: null,
         loiview: "",
         myview: "",
         sharedview: "",
@@ -36,7 +38,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
 
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-    // Update form data and mark field as touched
+    // For string fields
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -44,47 +46,46 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
         setTouched({ ...touched, [e.target.name]: true });
     };
 
-    // Validate required fields if touched
+    // For DatePicker
+    const handleDateChange = (field: "eventstart" | "eventend", date: Date | null) => {
+        setFormData({ ...formData, [field]: date });
+        setTouched({ ...touched, [field]: true });
+    };
+
     const isFieldValid = (field: string) => {
         if (!touched[field]) return true;
-        if (
-            field === "name" ||
-            field === "eventstart" ||
-            field === "eventend" ||
-            field === "location"
-        ) {
-            return formData[field as keyof FormData].trim() !== "";
+        if (field === "name" || field === "location") {
+            const value = formData[field as "name" | "location"];
+            return value.trim() !== "";
+        }
+        if (field === "eventstart" || field === "eventend") {
+            return formData[field as "eventstart" | "eventend"] !== null;
         }
         return true;
     };
 
+
     const hasErrors =
         !formData.name.trim() ||
-        !formData.eventstart.trim() ||
-        !formData.eventend.trim() ||
+        !formData.eventstart ||
+        !formData.eventend ||
         !formData.location.trim();
 
     const handleSubmit = async () => {
         if (hasErrors) {
-            alert(
-                "Please fill in all required fields: Name, Start Date, End Date, Location"
-            );
+            alert("Please fill in all required fields: Name, Start Date, End Date, Location");
             return;
         }
-
         const dataToSend: UploadTimelineEvent = {
             ...formData,
-            eventstart: formData.eventstart || null,
-            eventend: formData.eventend || null,
+            eventstart: formData.eventstart?.toISOString().slice(0, 10) || null,
+            eventend: formData.eventend?.toISOString().slice(0, 10) || null,
         };
-
         await onAdd(dataToSend);
-
-        // Reset form and touched state after submit
         setFormData({
             name: "",
-            eventstart: "",
-            eventend: "",
+            eventstart: null,
+            eventend: null,
             loiview: "",
             myview: "",
             sharedview: "",
@@ -97,18 +98,11 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 dark:bg-black/60"
-        /* Changed overlay opacity and color for consistency */
-        >
-            <div
-                className="scroll-container bg-dialog text-dialog-foreground border border-border rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] shadow-2xl"
-            >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 dark:bg-black/60">
+            <div className="scroll-container bg-dialog text-dialog-foreground border border-border rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] shadow-2xl">
                 <h2 className="text-xl font-semibold mb-6 text-primary">
                     Add New Timeline Event
                 </h2>
-
-                {/* Form fields */}
                 <InputField
                     label="Name"
                     id="name"
@@ -119,29 +113,24 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     required
                     valid={isFieldValid("name")}
                 />
-
-                <InputField
+                {/* Start Date */}
+                <DateField
                     label="Start Date"
                     id="eventstart"
-                    name="eventstart"
-                    type="date"
-                    value={formData.eventstart}
-                    onChange={handleChange}
+                    selected={formData.eventstart}
+                    onChange={date => handleDateChange("eventstart", date)}
                     required
                     valid={isFieldValid("eventstart")}
                 />
-
-                <InputField
+                {/* End Date */}
+                <DateField
                     label="End Date"
                     id="eventend"
-                    name="eventend"
-                    type="date"
-                    value={formData.eventend}
-                    onChange={handleChange}
+                    selected={formData.eventend}
+                    onChange={date => handleDateChange("eventend", date)}
                     required
                     valid={isFieldValid("eventend")}
                 />
-
                 <TextareaField
                     label="Loi's View"
                     id="loiview"
@@ -150,7 +139,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     value={formData.loiview}
                     onChange={handleChange}
                 />
-
                 <TextareaField
                     label="My's View"
                     id="myview"
@@ -159,7 +147,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     value={formData.myview}
                     onChange={handleChange}
                 />
-
                 <TextareaField
                     label="Shared View"
                     id="sharedview"
@@ -168,7 +155,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     value={formData.sharedview}
                     onChange={handleChange}
                 />
-
                 <InputField
                     label="Location"
                     id="location"
@@ -179,8 +165,6 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     required
                     valid={isFieldValid("location")}
                 />
-
-                {/* Button group */}
                 <div className="flex justify-end space-x-3 mt-6">
                     <button
                         onClick={onClose}
@@ -215,11 +199,7 @@ const InputField: React.FC<{
     valid?: boolean;
 }> = ({ label, id, name, type = "text", placeholder, value, onChange, required, valid = true }) => (
     <div className="mb-5">
-        <label
-            htmlFor={id}
-            className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"
-                }`}
-        >
+        <label htmlFor={id} className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"}`}>
             {label} {required && <span className="text-destructive">*</span>}
         </label>
         <input
@@ -232,8 +212,35 @@ const InputField: React.FC<{
             required={required}
             aria-invalid={!valid}
             aria-required={required}
-            className={`w-full rounded-md border px-3 py-2 text-sm bg-input focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition ${valid ? "border-input" : "border-destructive"
-                } text-foreground dark:bg-background dark:text-foreground`}
+            className={`w-full rounded-md border px-3 py-2 text-sm bg-input focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition ${valid ? "border-input" : "border-destructive"} text-foreground dark:bg-background dark:text-foreground`}
+        />
+    </div>
+);
+
+// Standalone field for DatePicker-formatted fields
+const DateField: React.FC<{
+    label: string;
+    id: string;
+    selected: Date | null;
+    onChange: (date: Date | null) => void;
+    required?: boolean;
+    valid?: boolean;
+}> = ({ label, id, selected, onChange, required, valid = true }) => (
+    <div className="mb-5">
+        <label className={`block mb-1 font-semibold ${valid ? "text-foreground dark:text-foreground" : "text-destructive"}`}>
+            {label} {required && <span className="text-destructive">*</span>}
+        </label>
+        <DatePicker
+            id={id}
+            selected={selected}
+            onChange={onChange}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="YYYY-MM-DD"
+            className={`w-full rounded-md border px-3 py-2 text-sm bg-input focus:outline-none focus:ring-2 focus:ring-accent transition ${valid ? "border-input" : "border-destructive"} text-foreground dark:bg-background dark:text-foreground`}
+            isClearable
+            showPopperArrow={false}
+            withPortal
+            autoComplete="off"
         />
     </div>
 );
@@ -257,8 +264,7 @@ const TextareaField: React.FC<{
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground
-                                focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
+            className="w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
         />
     </div>
 );
