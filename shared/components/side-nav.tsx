@@ -4,7 +4,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/shared";
-import { Menu, ListCollapse, CalendarClockIcon, X, BookOpen } from "lucide-react";
+import { Menu, ListCollapse, CalendarClockIcon, X, BookOpen, NotebookText } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
 
 interface NavItem {
@@ -12,7 +12,6 @@ interface NavItem {
     href?: string;
     icon: React.ElementType;
     external?: boolean;
-
 }
 
 interface SideNavProps {
@@ -31,6 +30,7 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
     const navLinks: NavItem[] = [
         { label: "Timeline", href: "/timeline", icon: CalendarClockIcon },
         { label: "Questions", href: "/questions", icon: BookOpen }, 
+        { label: "My's Simple Viewer", href: "/my-simple-viewer", icon: NotebookText }
     ];
 
     const toggleCollapsed = useCallback(() => {
@@ -98,10 +98,9 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                 role="navigation"
                 aria-label="Main"
                 className={cn(
-                    "fixed top-0 left-0 h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
+                    "fixed top-0 left-0 h-screen md:h-auto min-h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
                     "bg-white dark:bg-gray-900",
                     collapsed ? "w-16 md:w-16" : "w-full md:w-64",
-                    "md:relative md:h-auto md:top-auto md:left-auto",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",
                     "transform md:transform-none",
                     "max-w-xs md:max-w-none"

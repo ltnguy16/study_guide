@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import { CreateBrowserClient } from "@/lib/supabase/client";
 import { TimelineEvent } from "../../components/timeline-item-data";
-import { config } from "@/shared/components/config";
 
 export async function FetchEventById(id: number): Promise<TimelineEvent | null> {
     const supabase = CreateBrowserClient();

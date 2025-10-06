@@ -1,5 +1,5 @@
 import { CreateBrowserClient } from "@/lib/supabase/client";
-import { Question } from "../../components/question-page-content";
+import { Question } from "@/shared/components/typing";
 
 export async function UpdateQuestion(question: Question) {
     if (!question.id) {

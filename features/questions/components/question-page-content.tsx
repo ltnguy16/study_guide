@@ -5,17 +5,8 @@ import { MessageSquareWarning, Edit, X, CircleX } from "lucide-react";
 import React, { useState } from "react";
 import { useFetchQuestions } from "../services/fetch/fetch-questions";
 import QuestionUpsertDialog from "./question-upsert-dialog";
+import { ImportantType, Question } from "@/shared/components/typing";
 
-export type ImportantType = "Loi" | "My" | "Important";
-
-export interface Question {
-  id?: number;
-  question: string;
-  loi: string;
-  my: string;
-  important?: ImportantType;
-  category?: string;
-}
 
 function convertString(text: string): string {
   const withNewlines = text.replace(/\\n/g, "\n");
