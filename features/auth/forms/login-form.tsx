@@ -22,6 +22,7 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"div">) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -78,6 +79,10 @@ export function LoginForm({
                                 onChange={(e) => setEmail(e.target.value)}
                                 aria-invalid={!!error}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            ></button>
                         </div>
                         <div className="grid gap-2 py-2">
                             <div className="flex items-center">
