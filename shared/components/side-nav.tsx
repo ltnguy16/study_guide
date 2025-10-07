@@ -98,7 +98,7 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                 role="navigation"
                 aria-label="Main"
                 className={cn(
-                    "fixed top-0 left-0 h-screen md:h-auto min-h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
+                    "fixed md:relative top-0 left-0 h-screen md:h-auto min-h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
                     "bg-white dark:bg-gray-900",
                     collapsed ? "w-16 md:w-16" : "w-full md:w-64",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",

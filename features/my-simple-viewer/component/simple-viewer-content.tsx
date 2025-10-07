@@ -7,6 +7,8 @@ import { ImportantType, Question } from "@/shared/components/typing";
 import { InsertEmptyQuestion } from "./services/upsert/insert-empty-question";
 import { UpsertQuestion } from "./services/upsert/upsert-question";
 import { DeleteQuestion } from "./services/delete/delete-question";
+import { Spinner } from "@/shared";
+import { Delete } from "lucide-react";
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -174,16 +176,20 @@ export default function SimpleViewerContent() {
                   <td className="whitespace-normal break-words max-w-[350px] px-2 align-top">
                     <EditableCell id={id} field="my" val={editingRows[id]?.my ?? q.my} onChange={onFieldChange} />
                   </td>
-                  <td className="text-center w-10 px-1 align-top">
-                    <button
-                      onClick={() => deleteRow(id)}
-                      aria-label={`Delete question ${id}`}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      &times;
-                    </button>
+                  <td className="w-10 px-1 align-top text-center flex items-center justify-center">
+                    {isSaving 
+                      ? <Spinner/>
+                      : (
+                        <button
+                          onClick={() => deleteRow(id)}
+                          aria-label={`Delete question ${id}`}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Delete/>
+                        </button>
+                      )
+                    }
                   </td>
-                  <td className="align-top text-xs text-muted-foreground">{isSaving && "Saving..."}</td>
                 </tr>
               );
             })}
