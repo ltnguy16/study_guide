@@ -99,7 +99,7 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                 aria-label="Main"
                 className={cn(
                     "fixed md:relative top-0 left-0 h-screen md:h-auto min-h-screen transition-all duration-300 flex flex-col border-r border-gray-200 dark:border-gray-700 shadow-md z-50",
-                    "bg-white dark:bg-gray-900",
+                    "bg-background dark:bg-gray-900",
                     collapsed ? "w-16 md:w-16" : "w-full md:w-64",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",
                     "transform md:transform-none",
@@ -132,7 +132,7 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                     {/* Sidebar toggle */}
                     <button
                         onClick={toggleCollapsed}
-                        className="text-gray-600 dark:text-gray-300 focus:outline-none hover:text-pyramid-primary transition-colors hover:bg-muted/50 rounded p-1"
+                        className="text-gray-600 dark:text-gray-300 focus:outline-none hover:text-accent transition-colors hover:bg-muted/50 rounded p-1"
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
                         {collapsed ? (
@@ -147,7 +147,7 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                         <button
                             onClick={() => setMobileOpen(false)}
                             aria-label="Close menu"
-                            className="md:hidden text-gray-600 dark:text-gray-300 focus:outline-none hover:text-pyramid-primary transition-colors hover:bg-muted/50 rounded p-1"
+                            className="md:hidden text-gray-600 dark:text-gray-300 focus:outline-none hover:text-accent transition-colors hover:bg-muted/50 rounded p-1"
                         >
                             <X size={20} />
                         </button>
@@ -172,8 +172,8 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                                 className={cn(
                                     "flex items-center w-full px-3 py-2 rounded text-sm font-medium transition-colors",
                                     isActive
-                                        ? "text-pyramid-primary bg-muted dark:bg-gray-700"
-                                        : "text-gray-700 dark:text-gray-300 hover:text-pyramid-primary hover:bg-muted/50 dark:hover:bg-gray-700",
+                                        ? "text-accent bg-muted dark:bg-gray-700"
+                                        : "text-gray-700 dark:text-gray-300 hover:text-accent hover:bg-muted/50 dark:hover:bg-gray-700",
                                     collapsed ? "justify-center" : "justify-start"
                                 )}
                                 title={collapsed ? label : undefined}

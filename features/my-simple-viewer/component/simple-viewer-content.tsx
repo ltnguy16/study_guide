@@ -38,7 +38,10 @@ const EditableCell = React.memo(
         maxRows={15}
         value={val}
         onChange={(e) => onChange(id, field, e.target.value)}
-        className="w-[400px] max-w-full px-2 py-1 border border-gray-300 rounded text-sm dark:bg-muted/80 dark:text-foreground resize-none overflow-hidden"
+        className="w-[400px] max-w-full rounded-md border border-input px-3 py-2 text-sm 
+          bg-background text-foreground dark:bg-background dark:text-foreground
+          focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition
+          scroll-container resize-none overflow-hidden"
         placeholder={field}
         spellCheck={false}
       />
@@ -166,17 +169,20 @@ export default function SimpleViewerContent() {
               const id = q.id!;
               const isSaving = savingIds.has(id);
               return (
-                <tr key={id} className="hover:bg-muted/30 dark:hover:bg-muted/50 transition-colors align-top">
-                  <td className="whitespace-normal break-words max-w-[250px] px-2 align-top">
+                <tr
+                  key={id}
+                  className="bg-muted/70 dark:bg-muted/40 border-b border-border transition-colors align-top"
+                >
+                  <td className="whitespace-normal break-words max-w-[250px] align-top pt-1">
                     <EditableCell id={id} field="question" val={editingRows[id]?.question ?? q.question} onChange={onFieldChange} />
                   </td>
-                  <td className="whitespace-normal break-words max-w-[350px] px-2 align-top">
+                  <td className="whitespace-normal break-words max-w-[350px] align-top pt-1">
                     <EditableCell id={id} field="loi" val={editingRows[id]?.loi ?? q.loi} onChange={onFieldChange} />
                   </td>
-                  <td className="whitespace-normal break-words max-w-[350px] px-2 align-top">
+                  <td className="whitespace-normal break-words max-w-[350px] align-top pt-1">
                     <EditableCell id={id} field="my" val={editingRows[id]?.my ?? q.my} onChange={onFieldChange} />
                   </td>
-                  <td className="w-10 px-1 align-top text-center flex items-center justify-center">
+                  <td className="w-10 align-top text-center flex items-center justify-center pt-1">
                     {isSaving 
                       ? <Spinner/>
                       : (
