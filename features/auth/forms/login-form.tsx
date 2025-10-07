@@ -95,11 +95,12 @@ export function LoginForm({
                             </div>
                             <Input
                                 id="password"
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 aria-invalid={!!error}
+                                className="pr-10"  // padding right for icon
                             />
                             <button
                                 type="button"
