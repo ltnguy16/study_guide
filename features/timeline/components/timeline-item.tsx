@@ -175,6 +175,35 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
 
                 return (
                     <React.Fragment key={event.id}>
+                        {/* Start indicator */}
+                        <div
+                            style={{
+                            position: "absolute",
+                            left: `${left - 4}px`,   // slightly left of the bar
+                            top: `${startTop - 6}px`, // slightly above start of bar
+                            width: "12px",
+                            height: "12px",
+                            borderRadius: "50%",
+                            backgroundColor: "#B75D6F",
+                            boxShadow: "0 0 6px #B75D6F",
+                            zIndex: 10,
+                            }}
+                        />
+
+                        {/* End indicator */}
+                        <div
+                            style={{
+                            position: "absolute",
+                            left: `${left - 4}px`,   // aligned with start indicator horizontally
+                            top: `${endTop - 6}px`,  // slightly above end of bar
+                            width: "12px",
+                            height: "12px",
+                            borderRadius: "50%",
+                            backgroundColor: "#B75D6F",
+                            boxShadow: "0 0 6px #B75D6F",
+                            zIndex: 10,
+                            }}
+                        />
                         {/* Bar */}
                         <div
                             style={{

@@ -1,6 +1,6 @@
 import { CreateBrowserClient } from "@/lib/supabase/client";
 import { config } from "@/shared/components/config";
-import { TimelineEvent } from "@/features/timeline/components/timeline-item-data";
+import { TimelineEvent, TimelineEventWithLevel } from "@/features/timeline/components/timeline-item-data";
 
 type UpsertPayload = Omit<TimelineEvent, "images">;
 
@@ -37,13 +37,14 @@ export async function UpsertTimelineDates(
     startDate: string | null,
     endDate: string | null
 ) {
+    const eventWithLevel = event as TimelineEvent & { level?: number };
     const database = CreateBrowserClient();
 
     const startISO = startDate ? new Date(startDate).toISOString().replace("Z", "") : null;
     const endISO = endDate ? new Date(endDate).toISOString().replace("Z", "") : null;
 
     // Exclude images from update
-    const { level, images, ...eventWithoutLevelAndImages } = event;
+    const { level, images, ...eventWithoutLevelAndImages } = eventWithLevel;
 
     const updateData: UpsertPayload = {
     ...eventWithoutLevelAndImages,
