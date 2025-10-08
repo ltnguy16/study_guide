@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { TimelineEvent } from "./timeline-item-data";
+import { TimelineEvent, TimelineEventWithLevel } from "./timeline-item-data";
 import { TimelineItemDot } from "./timeline-item-dot";
+import { AssignTimelineLevels } from "./assign-timeline-levels";
 
 interface TimelineItemProps {
     events: TimelineEvent[];
@@ -84,12 +85,15 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
     onEventUpdate,
     onEventDelete,
 }) => {
+    const OFFSET_STEP = 32;
+    const eventsWithLevels: TimelineEventWithLevel[] = AssignTimelineLevels(events);
+
     return (
         <div
             style={{
                 position: "relative",
                 height: `${TIMELINE_HEIGHT}px`,
-                width: "256px",
+                width: "100%",
                 borderLeft: "4px solid #7F2A3C",   // Velvet red main timeline line
                 marginLeft: "40px",
                 userSelect: "none",
@@ -100,16 +104,18 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                 const top = getPosition(date);
                 return (
                     <div
-                        key={year}
+                        key={"yearline-" + year}
+                        aria-hidden="true"
                         style={{
                             position: "absolute",
-                            left: "-80px",
+                            left: 0,
                             top: `${top}px`,
-                            transform: "translateY(-50%)",
-                            color: "#6B5876",             // Warm muted purple-gray for years
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            userSelect: "none",
+                            width: "100%",
+                            height: "1px",
+                            background: "hsl(var(--muted))",
+                            opacity: 0.66,
+                            zIndex: 1,
+                            pointerEvents: "none"
                         }}
                     >
                         {year}
@@ -123,15 +129,18 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                 return (
                     <React.Fragment key={label + date}>
                         <div
+                            key={"quarterline-" + date}
+                            aria-hidden="true"
                             style={{
-                                position: "absolute",
-                                left: "-12px",
-                                top: `${top}px`,
-                                width: "12px",
-                                height: "2px",
-                                backgroundColor: "#A05264", // Softer dusty rose for quarters
-                                borderRadius: "1px",
-                                transform: "translateY(-50%)",
+                            position: "absolute",
+                            left: 0,
+                            top: `${top}px`,
+                            width: "100%",
+                            height: "1px",
+                            background: "hsl(var(--muted))",
+                            opacity: 0.33,
+                            zIndex: 1,
+                            pointerEvents: "none"
                             }}
                         />
                         <div
@@ -155,11 +164,14 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
             })}
 
             {/* Events bars and dots */}
-            {events.map((event) => {
+            {eventsWithLevels.map((event) => {
                 const startTop = getPosition(event.eventstart!);
                 const endTop = getPosition(event.eventend!);
                 const barHeight = Math.max(endTop - startTop, 4);
                 const dotTop = startTop + barHeight / 2;
+
+                const leftBase = 7;
+                const left = leftBase + event.level * OFFSET_STEP;
 
                 return (
                     <React.Fragment key={event.id}>
@@ -167,7 +179,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                         <div
                             style={{
                                 position: "absolute",
-                                left: "7px",
+                                left: `${left}px`,
                                 top: `${startTop}px`,
                                 height: `${barHeight}px`,
                                 width: "4px",
@@ -180,6 +192,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
                             <TimelineItemDot
                                 event={event}
                                 top={dotTop}
+                                left={left}
                                 isOpen={openDotId === event.id}
                                 onOpen={() => onOpen(event.id)}
                                 onClose={onClose}

@@ -15,6 +15,10 @@ export interface TimelineEvent {
     images: string[];
 }
 
+export interface TimelineEventWithLevel extends TimelineEvent {
+  level: number;
+}
+
 export function useTimelineItemData() {
     const [events, setEvents] = useState<TimelineEvent[]>([]);
     const [loading, setLoading] = useState(true);

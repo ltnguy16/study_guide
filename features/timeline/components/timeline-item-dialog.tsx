@@ -38,6 +38,7 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
     const handleSubmit = async (field: FieldKey, newValue: TimelineEvent[FieldKey]) => {
         setLoading(true);
         try {
+            //const { level, ...eventWithoutLevel } = localEvent;
             await UpsertTimelineField(localEvent, field, newValue);
             const refreshedEvent = await FetchEventById(localEvent.id);
             if (refreshedEvent) {

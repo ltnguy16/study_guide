@@ -39,18 +39,17 @@ export async function UpsertTimelineDates(
 ) {
     const database = CreateBrowserClient();
 
-    const startISO = startDate ? new Date(startDate).toISOString() : null;
-    const endISO = endDate ? new Date(endDate).toISOString() : null;
+    const startISO = startDate ? new Date(startDate).toISOString().replace("Z", "") : null;
+    const endISO = endDate ? new Date(endDate).toISOString().replace("Z", "") : null;
 
     // Exclude images from update
-    const { images, ...eventWithoutImages } = event;
+    const { level, images, ...eventWithoutLevelAndImages } = event;
 
     const updateData: UpsertPayload = {
-        ...eventWithoutImages,
-        eventstart: startISO,
-        eventend: endISO,
+    ...eventWithoutLevelAndImages,
+    eventstart: startISO,
+    eventend: endISO,
     };
-
     const { data, error } = await database
         .from(config.timelineTable!)
         .upsert(updateData, { onConflict: "id" })

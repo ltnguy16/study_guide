@@ -33,8 +33,8 @@ export const EditDateRangeDialog: React.FC<EditDateRangeDialogProps> = ({
 
     const handleSubmit = () => {
         onSubmit(
-            startDate ? startDate.toISOString().slice(0, 10) : "",
-            endDate ? endDate.toISOString().slice(0, 10) : ""
+            startDate ? startDate.toISOString() : initialStartDate,
+            endDate ? endDate.toISOString() : initialEndDate
         );
     };
 

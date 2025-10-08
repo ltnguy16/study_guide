@@ -7,6 +7,7 @@ import { TimelineDialogPortal } from "./timeline-dialog-portal";
 interface TimelineItemDotProps {
     event: TimelineEvent;
     top: number;
+    left: number;
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
@@ -17,6 +18,7 @@ interface TimelineItemDotProps {
 export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
     event,
     top,
+    left,
     isOpen,
     onOpen,
     onClose,
@@ -82,7 +84,7 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
             style={{
                 position: "absolute",
                 top: `${top}px`,
-                left: "0px",
+                left: `${left}px`,
                 zIndex: 60,
                 transform: "translateY(-50%)",
             }}
@@ -110,7 +112,6 @@ export const TimelineItemDot: React.FC<TimelineItemDotProps> = ({
                 }}
             >
                 <div
-                    ref={dotRef}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     onFocus={() => setIsHovered(true)}
