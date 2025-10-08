@@ -4,9 +4,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useFetchQuestions } from "@/features/questions/services/fetch/fetch-questions";
 import { ImportantType, Question } from "@/shared/components/typing";
-import { InsertEmptyQuestion } from "./services/upsert/insert-empty-question";
-import { UpsertQuestion } from "./services/upsert/upsert-question";
-import { DeleteQuestion } from "./services/delete/delete-question";
+import { InsertEmptyQuestion } from "../services/upsert/insert-empty-question";
+import { UpsertQuestion } from "../services/upsert/upsert-question";
+import { DeleteQuestion } from "../services/delete/delete-question";
 import { Spinner } from "@/shared";
 import { Delete } from "lucide-react";
 

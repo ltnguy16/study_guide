@@ -251,6 +251,7 @@ export default function QuestionUpsertDialog({
                             <option value="Finances">Finances</option>
                             <option value="Legal/Immigration">Legal/Immigration</option>
                             <option value="Daily Life & Habits">Daily Life & Habits</option>
+                            <option value="Proposal/Marriage">Proposal/Marriage</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
