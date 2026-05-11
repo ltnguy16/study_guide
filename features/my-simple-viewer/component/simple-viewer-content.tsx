@@ -102,7 +102,7 @@ export default function SimpleViewerContent() {
         existing.category === upsertData.category &&
         existing.important === upsertData.important
       ) {
-        return prev; // no change anyway
+        return prev;
       }
       const newQuestions = [...prev];
       newQuestions[idx] = { ...existing, ...upsertData };

@@ -18,7 +18,7 @@ export function useFetchQuestions(refreshTrigger: boolean) {
     }
 
     fetchQuestions();
-  }, [refreshTrigger]); // dependency added here
+  }, [refreshTrigger]);
 
   return { questions, loading, error };
 }

@@ -126,7 +126,6 @@ export default function QuestionUpsertDialog({
     return (
         // Overlay background matching light/dark theme from CSS variables
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 dark:bg-black/60">
-            {/* Dialog container with consistent theme colors and spacing */}
             <div
                 className="min-w-[340px] w-full max-w-md bg-dialog text-dialog-foreground border border-border rounded-2xl shadow-2xl px-5 py-6 relative"
                 style={{
@@ -134,7 +133,6 @@ export default function QuestionUpsertDialog({
                     color: "hsl(var(--dialog-foreground))",
                 }}
             >
-                {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="text-xl font-semibold text-primary">
                         {mode === "update" ? "Edit Question" : "Add Question"}
@@ -149,14 +147,12 @@ export default function QuestionUpsertDialog({
                     </button>
                 </div>
 
-                {/* Error message */}
                 {error && (
                     <div className="mb-2 text-[13px] p-2 rounded bg-red-100 text-destructive font-medium border border-destructive">
                         {error}
                     </div>
                 )}
 
-                {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-3">
                     {/* Question */}
                     <div>

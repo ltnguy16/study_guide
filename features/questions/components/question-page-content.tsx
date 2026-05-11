@@ -111,12 +111,10 @@ export default function QuestionsPageContent() {
             className="w-10 h-10 flex items-center justify-center rounded-full shadow-sm hover:shadow-md transition"
             type="button"
           >
-            {/* You can add an icon here */}
             +
           </button>
         ) : (
           <div className="flex flex-col gap-2 p-2 rounded-xl bg-background bg-white/0 shadow-sm w-full">
-            {/* Segmented mode toggle */}
             <div className="flex rounded-md overflow-hidden border border-border">
               <button
                 onClick={() => setMode("showAll")}
@@ -150,7 +148,6 @@ export default function QuestionsPageContent() {
               </button>
             </div>
 
-            {/* Second row: add button left, collapse right */}
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={() => {
@@ -225,7 +222,6 @@ export default function QuestionsPageContent() {
               role="button"
             >
               <div className="flex flex-row justify-between items-center mb-1">
-                {/* Category label on the left */}
                 {category && (
                   <div className="text-xs font-semibold text-secondary">
                     {category}
