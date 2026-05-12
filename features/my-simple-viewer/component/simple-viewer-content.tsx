@@ -76,53 +76,53 @@ export default function SimpleViewerContent() {
 
   useEffect(() => {
     async function saveRow(id: number, data: Question) {
-  setSavingIds((prev) => new Set(prev).add(id));
-  try {
-    const upsertData = {
-      ...data,
-      id,
-      important:
-        data.important === undefined
-          ? undefined
-          : data.important,
-      category:
-        data.category === undefined || data.category === ""
-          ? "Legal/Immigration"
-          : data.category,
-    };
-    await UpsertQuestion(upsertData);
-    setQuestions((prev) => {
-      const idx = prev.findIndex((q) => q.id === id);
-      if (idx === -1) return prev;
-      const existing = prev[idx];
-      if (
-        existing.question === upsertData.question &&
-        existing.loi === upsertData.loi &&
-        existing.my === upsertData.my &&
-        existing.category === upsertData.category &&
-        existing.important === upsertData.important
-      ) {
-        return prev;
+      setSavingIds((prev) => new Set(prev).add(id));
+      try {
+        const upsertData = {
+          ...data,
+          id,
+          important:
+            data.important === undefined
+              ? undefined
+              : data.important,
+          category:
+            data.category === undefined || data.category === ""
+              ? "Legal/Immigration"
+              : data.category,
+        };
+        await UpsertQuestion(upsertData);
+        setQuestions((prev) => {
+          const idx = prev.findIndex((q) => q.id === id);
+          if (idx === -1) return prev;
+          const existing = prev[idx];
+          if (
+            existing.question === upsertData.question &&
+            existing.me === upsertData.me &&
+            existing.partner === upsertData.partner &&
+            existing.category === upsertData.category &&
+            existing.important === upsertData.important
+          ) {
+            return prev;
+          }
+          const newQuestions = [...prev];
+          newQuestions[idx] = { ...existing, ...upsertData };
+          return newQuestions;
+        });
+      } catch (e) {
+        console.error("Save failed", e);
+      } finally {
+        setSavingIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+        setEditingRows((prev) => {
+          const newEdit = { ...prev };
+          delete newEdit[id];
+          return newEdit;
+        });
       }
-      const newQuestions = [...prev];
-      newQuestions[idx] = { ...existing, ...upsertData };
-      return newQuestions;
-    });
-  } catch (e) {
-    console.error("Save failed", e);
-  } finally {
-    setSavingIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(id);
-      return newSet;
-    });
-    setEditingRows((prev) => {
-      const newEdit = { ...prev };
-      delete newEdit[id];
-      return newEdit;
-    });
-  }
-}
+    }
 
     for (const [idStr, data] of Object.entries(debouncedEditingRows)) {
       const id = parseInt(idStr, 10);
@@ -177,21 +177,21 @@ export default function SimpleViewerContent() {
                     <EditableCell id={id} field="question" val={editingRows[id]?.question ?? q.question} onChange={onFieldChange} />
                   </td>
                   <td className="whitespace-normal break-words max-w-[350px] align-top pt-1">
-                    <EditableCell id={id} field="loi" val={editingRows[id]?.loi ?? q.loi} onChange={onFieldChange} />
+                    <EditableCell id={id} field="me" val={editingRows[id]?.me ?? q.me} onChange={onFieldChange} />
                   </td>
                   <td className="whitespace-normal break-words max-w-[350px] align-top pt-1">
-                    <EditableCell id={id} field="my" val={editingRows[id]?.my ?? q.my} onChange={onFieldChange} />
+                    <EditableCell id={id} field="partner" val={editingRows[id]?.partner ?? q.partner} onChange={onFieldChange} />
                   </td>
                   <td className="w-10 align-top text-center flex items-center justify-center pt-1">
-                    {isSaving 
-                      ? <Spinner/>
+                    {isSaving
+                      ? <Spinner />
                       : (
                         <button
                           onClick={() => deleteRow(id)}
                           aria-label={`Delete question ${id}`}
                           className="text-red-600 hover:text-red-800"
                         >
-                          <Delete/>
+                          <Delete />
                         </button>
                       )
                     }

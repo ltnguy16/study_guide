@@ -15,8 +15,8 @@ interface NavItem {
 }
 
 interface SideNavProps {
-  hideDots: boolean;
-  setHideDots: (val: boolean) => void;
+    hideDots: boolean;
+    setHideDots: (val: boolean) => void;
 }
 
 export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
@@ -29,8 +29,8 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
 
     const navLinks: NavItem[] = [
         { label: "Timeline", href: "/timeline", icon: CalendarClockIcon },
-        { label: "Questions", href: "/questions", icon: BookOpen }, 
-        { label: "My's Simple Viewer", href: "/my-simple-viewer", icon: NotebookText }
+        { label: "Questions", href: "/questions", icon: BookOpen },
+        { label: "Simple Viewer", href: "/my-simple-viewer", icon: NotebookText }
     ];
 
     const toggleCollapsed = useCallback(() => {
@@ -188,9 +188,9 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                 <div className={cn(
                     "p-2 border-t border-gray-200 dark:border-gray-700",
                     collapsed ? "flex justify-center" : "flex justify-start"
-                    )}>
-                        <ThemeSwitcher />
-                    </div>
+                )}>
+                    <ThemeSwitcher />
+                </div>
             </aside>
         </>
     );

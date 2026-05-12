@@ -8,7 +8,7 @@ const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` 
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Loi & My Study Guide",
+  title: "Loi's Study Guide Helper",
   description: "Study Guide",
 };
 

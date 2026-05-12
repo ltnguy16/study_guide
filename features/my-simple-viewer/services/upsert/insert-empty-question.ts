@@ -4,7 +4,7 @@ export async function InsertEmptyQuestion() {
   const database = await CreateBrowserClient();
   const { data, error } = await database
     .from("questions")
-    .insert({ question: "", loi: "", my: "", important: null, category: null })
+    .insert({ question: "", me: "", partner: "", important: null, category: null })
     .select();
 
   if (error) {
