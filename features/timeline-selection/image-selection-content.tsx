@@ -27,7 +27,8 @@ export default function ImageSelectionContent() {
             setLoading(true);
             try {
                 const { images, totalCount } = await FetchEventImages("collections", currentPage, imagesPerPage);
-                setAvailableImages(images);
+                const filteredImages = images.filter(img => img !== ".emptyFolderPlaceholder");
+                setAvailableImages(filteredImages);
                 setTotalImages(totalCount);
             } catch (error) {
                 console.error("Error fetching images:", error);
