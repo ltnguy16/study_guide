@@ -8,7 +8,7 @@ export interface TimelineEvent {
     name: string;
     eventstart: string | null;
     eventend: string | null;
-    loiview: string;
+    outsideview: string;
     myview: string;
     sharedview: string;
     location: string;
@@ -16,7 +16,7 @@ export interface TimelineEvent {
 }
 
 export interface TimelineEventWithLevel extends TimelineEvent {
-  level: number;
+    level: number;
 }
 
 export function useTimelineItemData() {
@@ -54,7 +54,7 @@ export function useTimelineItemData() {
                     name: event.name,
                     eventstart: event.eventstart,
                     eventend: event.eventend,
-                    loiview: event.loiview,
+                    outsideview: event.loiview,
                     myview: event.myview,
                     sharedview: event.sharedview,
                     location: event.location,

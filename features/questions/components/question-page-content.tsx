@@ -9,28 +9,26 @@ import { ImportantType, Question } from "@/shared/components/typing";
 
 
 function convertString(text: string): string {
+  if (!text) return "";
+
   const withNewlines = text.replace(/\\n/g, "\n");
-  // Split into lines
   const lines = withNewlines.split("\n");
-  // Add bullet at start of every line
   const bulletedLines = lines.map(line => `• ${line.trim()}`);
-  // Join back into a single string with real newlines
   return bulletedLines.join("\n");
 }
-
 
 function ImportantBadge({ important }: { important?: ImportantType }) {
   if (!important) return null;
 
   const colorMap: Record<ImportantType, string> = {
-    Loi: "bg-blue-600",
-    My: "bg-purple-600",
+    Me: "bg-blue-600",
+    Partner: "bg-purple-600",
     Important: "bg-red-600",
   };
 
   const labelMap: Record<ImportantType, string> = {
-    Loi: "Marked important by Loi",
-    My: "Marked important by My",
+    Me: "Marked important by Me",
+    Partner: "Marked important by Partner",
     Important: "Marked Important!",
   };
 
@@ -84,9 +82,9 @@ export default function QuestionsPageContent() {
 
   const getSortPriority = (important?: ImportantType): number => {
     if (!important) return 3;
-    if (sortBy === "Important") return important === "Important" ? 0 : important === "My" ? 1 : 2;
-    if (sortBy === "My") return important === "My" ? 0 : important === "Important" ? 1 : 2;
-    if (sortBy === "Loi") return important === "Loi" ? 0 : important === "Important" ? 1 : 2;
+    if (sortBy === "Important") return important === "Important" ? 0 : important === "Partner" ? 1 : 2;
+    if (sortBy === "Partner") return important === "Partner" ? 0 : important === "Important" ? 1 : 2;
+    if (sortBy === "Me") return important === "Me" ? 0 : important === "Important" ? 1 : 2;
     return 0;
   };
 
@@ -188,23 +186,23 @@ export default function QuestionsPageContent() {
             Important
           </button>
           <button
-            onClick={() => setSortBy("My")}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "My" ? "bg-purple-600 text-white" : "bg-muted text-foreground"}`}
+            onClick={() => setSortBy("Partner")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "Partner" ? "bg-purple-600 text-white" : "bg-muted text-foreground"}`}
           >
-            My
+            Partner
           </button>
           <button
-            onClick={() => setSortBy("Loi")}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "Loi" ? "bg-blue-600 text-white" : "bg-muted text-foreground"}`}
+            onClick={() => setSortBy("Me")}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${sortBy === "Me" ? "bg-blue-600 text-white" : "bg-muted text-foreground"}`}
           >
-            Loi
+            Me
           </button>
         </div>
       </div>
 
       {/* Question list */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {sortedQuestions.map(({ id, question, loi, my, important, category }) => {
+        {sortedQuestions.map(({ id, question, me, partner, important, category }) => {
           const expanded = isExpanded(id);
           return (
             <li
@@ -264,14 +262,14 @@ export default function QuestionsPageContent() {
                 <div
                   className={`scroll-container max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
                 >
-                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">Loi's Answer</h3>
-                  <p className="text-xs leading-snug">{convertString(loi)}</p>
+                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">My Answer</h3>
+                  <p className="text-xs leading-snug">{convertString(me)}</p>
                 </div>
                 <div
                   className={`scroll-container max-h-52 overflow-y-auto border border-border rounded-md p-2 bg-background dark:bg-background shadow-inner whitespace-pre-line`}
                 >
-                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">My's Answer</h3>
-                  <p className="text-xs leading-snug">{convertString(my)}</p>
+                  <h3 className="text-xs font-semibold text-accent mb-1 select-none">Partner's Answer</h3>
+                  <p className="text-xs leading-snug">{convertString(partner)}</p>
                 </div>
 
               </div>

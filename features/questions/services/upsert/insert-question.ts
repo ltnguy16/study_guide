@@ -3,7 +3,7 @@ import { Question } from "@/shared/components/typing";
 
 export async function InsertQuestion(question: Omit<Question, "id">) {
     const database = await CreateBrowserClient();
-
+    console.log(question)
     const { data, error } = await database
         .from("questions")
         .insert(question)

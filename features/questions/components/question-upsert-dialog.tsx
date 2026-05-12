@@ -17,7 +17,7 @@ interface Props {
     onSuccess?: () => void;
 }
 
-const importantTypes: ImportantType[] = ["Important", "Loi", "My"];
+const importantTypes: ImportantType[] = ["Important", "Me", "Partner"];
 
 export default function QuestionUpsertDialog({
     open,
@@ -29,8 +29,8 @@ export default function QuestionUpsertDialog({
     const [fields, setFields] = useState<Question>({
         id: initial?.id ?? 0,
         question: initial?.question ?? "",
-        loi: initial?.loi ?? "",
-        my: initial?.my ?? "",
+        me: initial?.me ?? "",
+        partner: initial?.partner ?? "",
         important: initial?.important,
         category: initial?.category ?? "",
     });
@@ -46,8 +46,8 @@ export default function QuestionUpsertDialog({
             setFields({
                 id: 0,
                 question: "",
-                loi: "",
-                my: "",
+                me: "",
+                partner: "",
                 important: undefined,
                 category: "",
             });
@@ -60,7 +60,7 @@ export default function QuestionUpsertDialog({
         e.preventDefault();
         setError(null);
 
-        if (!fields.question || !fields.loi || !fields.my) {
+        if (!fields.question || !fields.me || !fields.partner) {
             setError("All fields are required.");
             return;
         }
@@ -178,17 +178,17 @@ export default function QuestionUpsertDialog({
                     {/* Loi's answer */}
                     <div>
                         <label
-                            htmlFor="loi"
+                            htmlFor="me"
                             className="block text-sm font-semibold mb-1 text-foreground"
                         >
-                            Loi’s Answer
+                            My Answer
                         </label>
                         <textarea
-                            id="loi"
-                            name="loi"
+                            id="me"
+                            name="me"
                             className="scroll-container w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground
                                 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
-                            value={fields.loi}
+                            value={fields.me}
                             onChange={handleChange}
                             required
                             rows={2}
@@ -196,20 +196,20 @@ export default function QuestionUpsertDialog({
                         />
                     </div>
 
-                    {/* My's answer */}
+                    {/* partner's answer */}
                     <div>
                         <label
-                            htmlFor="my"
+                            htmlFor="partner"
                             className="block text-sm font-semibold mb-1 text-foreground"
                         >
-                            My’s Answer
+                            Partner’s Answer
                         </label>
                         <textarea
-                            id="my"
-                            name="my"
+                            id="partner"
+                            name="partner"
                             className="scroll-container w-full rounded-md border border-input px-3 py-2 text-sm bg-input text-foreground dark:bg-background dark:text-foreground
                                 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
-                            value={fields.my}
+                            value={fields.partner}
                             onChange={handleChange}
                             required
                             rows={2}
@@ -236,18 +236,12 @@ export default function QuestionUpsertDialog({
                             required
                         >
                             <option value="">Select Category</option>
-                            <option value="Personal/Physique">Personal/Physique</option>
-                            <option value="History/Future">History/Future</option>
-                            <option value="Relationships">Relationships</option>
-                            <option value="Residence">Residence</option>
-                            <option value="Health/Medication">Health/Medication</option>
-                            <option value="Family & Relatives">Family & Relatives</option>
-                            <option value="Career/Education">Career/Education</option>
-                            <option value="Hobbies/Interests">Hobbies/Interests</option>
-                            <option value="Finances">Finances</option>
-                            <option value="Legal/Immigration">Legal/Immigration</option>
-                            <option value="Daily Life & Habits">Daily Life & Habits</option>
-                            <option value="Proposal/Marriage">Proposal/Marriage</option>
+                            <option value="Math">Math</option>
+                            <option value="History">History</option>
+                            <option value="English">English</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Health">Health</option>
+                            <option value="Physic">Physic</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>

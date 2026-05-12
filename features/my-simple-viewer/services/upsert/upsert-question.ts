@@ -8,8 +8,8 @@ export async function UpsertQuestion(question: Question) {
     .upsert({
       id: question.id,
       question: question.question,
-      loi: question.loi,
-      my: question.my,
+      me: question.me,
+      partner: question.partner,
       important: question.important ?? null,
       category: question.category ?? null,
     })

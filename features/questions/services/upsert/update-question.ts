@@ -12,8 +12,8 @@ export async function UpdateQuestion(question: Question) {
         .from("questions")
         .update({
             question: question.question,
-            loi: question.loi,
-            my: question.my,
+            me: question.me,
+            partner: question.partner,
             important: question.important ?? null,
             category: question.category ?? null,
         })

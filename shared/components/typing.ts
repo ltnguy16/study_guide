@@ -1,10 +1,10 @@
-export type ImportantType = "Loi" | "My" | "Important";
+export type ImportantType = "Me" | "Partner" | "Important";
 
 export interface Question {
   id?: number;
   question: string;
-  loi: string;
-  my: string;
+  me: string;
+  partner: string;
   important?: ImportantType;
   category?: string;
 }

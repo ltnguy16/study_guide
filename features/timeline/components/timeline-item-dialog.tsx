@@ -14,7 +14,7 @@ interface TimelineItemDialogProps {
     onEventDelete: (deletedId: number) => void;
 }
 
-type FieldKey = keyof Pick<TimelineEvent, "loiview" | "myview" | "sharedview" | "location" | "name">;
+type FieldKey = keyof Pick<TimelineEvent, "myview" | "outsideview" | "sharedview" | "location" | "name">;
 
 export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
     event,
@@ -104,8 +104,8 @@ export const TimelineItemDialog: React.FC<TimelineItemDialogProps> = ({
     };
 
     const fieldItems: { key: FieldKey; label: string; value: string }[] = [
-        { key: "loiview", label: "Loi's View", value: localEvent.loiview },
-        { key: "myview", label: "My's View", value: localEvent.myview },
+        { key: "myview", label: "My View", value: localEvent.myview },
+        { key: "outsideview", label: "Outsider View", value: localEvent.outsideview },
         { key: "sharedview", label: "Shared View", value: localEvent.sharedview },
         { key: "location", label: "Location", value: localEvent.location },
     ];
