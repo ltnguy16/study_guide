@@ -32,7 +32,7 @@ export async function FetchEventById(id: number): Promise<TimelineEvent | null> 
         name: event.name,
         eventstart: event.eventstart,
         eventend: event.eventend,
-        loiview: event.loiview,
+        outsideview: event.outsideview,
         myview: event.myview,
         sharedview: event.sharedview,
         location: event.location,

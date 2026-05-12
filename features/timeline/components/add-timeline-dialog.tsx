@@ -7,7 +7,7 @@ type FormData = {
     name: string;
     eventstart: Date | null;
     eventend: Date | null;
-    loiview: string;
+    outsideview: string;
     myview: string;
     sharedview: string;
     location: string;
@@ -30,7 +30,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
         name: "",
         eventstart: null,
         eventend: null,
-        loiview: "",
+        outsideview: "",
         myview: "",
         sharedview: "",
         location: "",
@@ -86,7 +86,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
             name: "",
             eventstart: null,
             eventend: null,
-            loiview: "",
+            outsideview: "",
             myview: "",
             sharedview: "",
             location: "",
@@ -132,19 +132,19 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                     valid={isFieldValid("eventend")}
                 />
                 <TextareaField
-                    label="Loi's View"
-                    id="loiview"
-                    name="loiview"
-                    placeholder="Loi's description"
-                    value={formData.loiview}
-                    onChange={handleChange}
-                />
-                <TextareaField
-                    label="My's View"
+                    label="My View"
                     id="myview"
                     name="myview"
                     placeholder="My description"
                     value={formData.myview}
+                    onChange={handleChange}
+                />
+                <TextareaField
+                    label="Outsider View"
+                    id="outsideview"
+                    name="outsideview"
+                    placeholder="Outsider description"
+                    value={formData.outsideview}
                     onChange={handleChange}
                 />
                 <TextareaField

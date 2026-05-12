@@ -57,7 +57,7 @@ function AddTimelineDialogContainer({
             name: data.name,
             eventstart: data.eventstart,
             eventend: data.eventend,
-            loiview: data.loiview,
+            outsideview: data.outsideview,
             myview: data.myview,
             sharedview: data.sharedview,
             location: data.location,
