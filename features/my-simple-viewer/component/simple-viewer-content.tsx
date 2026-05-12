@@ -159,8 +159,8 @@ export default function SimpleViewerContent() {
           <thead>
             <tr className="bg-muted dark:bg-muted/80">
               <th className="border border-border p-2 text-left w-1/3">Question</th>
-              <th className="border border-border p-2 text-left w-1/3">Loi's Answer</th>
-              <th className="border border-border p-2 text-left w-1/3">My's Answer</th>
+              <th className="border border-border p-2 text-left w-1/3">My Answer</th>
+              <th className="border border-border p-2 text-left w-1/3">Partner's Answer</th>
               <th className="border border-border w-10 text-center px-1">Del</th>
             </tr>
           </thead>
