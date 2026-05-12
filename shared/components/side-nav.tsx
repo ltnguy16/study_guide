@@ -184,13 +184,13 @@ export default function SideNav({ hideDots, setHideDots }: SideNavProps) {
                             </Link>
                         );
                     })}
+                    <div className={cn(
+                        "p-2 border-t border-gray-200 dark:border-gray-700",
+                        collapsed ? "flex justify-center" : "flex justify-start"
+                    )}>
+                        <ThemeSwitcher />
+                    </div>
                 </nav>
-                <div className={cn(
-                    "p-2 border-t border-gray-200 dark:border-gray-700",
-                    collapsed ? "flex justify-center" : "flex justify-start"
-                )}>
-                    <ThemeSwitcher />
-                </div>
             </aside>
         </>
     );

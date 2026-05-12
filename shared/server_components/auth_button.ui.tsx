@@ -18,6 +18,11 @@ export function AuthButtonUI({ user }: { user: { email?: string } | null }) {
                     Sign in
                 </Link>
             </Button>
+            <Button asChild size="sm" variant="header_light">
+                <Link href="/auth/sign-up" className="text-accent hover:underline">
+                    Sign Up
+                </Link>
+            </Button>
         </div>
     );
 }
